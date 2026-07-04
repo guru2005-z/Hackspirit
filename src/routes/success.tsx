@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { useApp } from "@/lib/AppContext";
@@ -6,17 +6,16 @@ import { ConfettiEffect } from "@/components/hackspirit/ConfettiEffect";
 import { ORGANIZER_PHONE } from "@/lib/hackspirit-utils";
 import { TiltWrapper } from "@/components/hackspirit/TiltWrapper";
 
-export const Route = createFileRoute("/success")({
-  head: () => ({ meta: [{ title: "Registered! — HACKSPIRIT 2K26" }] }),
-  component: SuccessPage,
-});
-
-function SuccessPage() {
+export default function SuccessPage() {
   const navigate = useNavigate();
   const { currentRegistration } = useApp();
 
   useEffect(() => {
-    if (!currentRegistration) navigate({ to: "/" });
+    document.title = "Registered! — HACKSPIRIT 2K26";
+  }, []);
+
+  useEffect(() => {
+    if (!currentRegistration) navigate("/");
   }, [currentRegistration, navigate]);
 
   if (!currentRegistration) return null;

@@ -1,6 +1,6 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
 import { useApp, emptyMember, type Member } from "@/lib/AppContext";
@@ -8,26 +8,32 @@ import { calculateFee, getFeeBreakdown } from "@/lib/hackspirit-utils";
 import { teamNameExists } from "@/lib/hackspirit-cloud";
 import { TiltWrapper } from "@/components/hackspirit/TiltWrapper";
 
-export const Route = createFileRoute("/register")({
-  head: () => ({
-    meta: [
-      { title: "Register — HACKSPIRIT 2K26" },
-      {
-        name: "description",
-        content: "Register your team for HACKSPIRIT 2K26. ₹100/IEEE member, ₹150/non-IEEE.",
-      },
-    ],
-  }),
-  component: RegisterPage,
-});
-
-const BRANCHES = ["CSE", "AI & DS", "IT", "ECE", "Other Technical Branch"];
+const BRANCHES = [
+  "CSE",
+  "AI & DS",
+  "AI/ML",
+  "DS",
+  "IT",
+  "ECE",
+  "EEE",
+  "Civil",
+  "Mechanical",
+  "Other Technical Branch"
+];
 const SECTIONS = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"];
 
-function RegisterPage() {
+export default function RegisterPage() {
   const navigate = useNavigate();
   const { formData, setFormData, setCalculatedFee } = useApp();
   const [errorField, setErrorField] = useState<string>("");
+
+  useEffect(() => {
+    document.title = "Register — HACKSPIRIT 2K26";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", "Register your team for HACKSPIRIT 2K26. ₹100/IEEE member, ₹150/non-IEEE.");
+    }
+  }, []);
 
   const total = useMemo(() => calculateFee(formData.members, formData.teamSize), [formData]);
   const breakdown = useMemo(() => getFeeBreakdown(formData.members, formData.teamSize), [formData]);
@@ -87,7 +93,7 @@ function RegisterPage() {
     }
     setCalculatedFee(total);
     toast.success("Proceeding to payment…");
-    navigate({ to: "/payment" });
+    navigate("/payment");
   };
 
   const fieldErr = (k: string) => errorField === k;
@@ -159,8 +165,33 @@ function RegisterPage() {
       <div className="mt-8 space-y-6">
         {Array.from({ length: formData.teamSize }).map((_, i) => {
           const m = formData.members[i] || emptyMember();
+
+          // Calculate filled fields progress for dynamic border glow
+          const filledFields = [
+            m.name.trim() !== "",
+            m.roll.trim() !== "",
+            m.email.trim() !== "",
+            m.phone.trim() !== "",
+            m.branch !== "",
+            m.section !== "",
+            ...(m.isIEEE ? [m.ieeeId.trim() !== ""] : [])
+          ];
+          const filledCount = filledFields.filter(Boolean).length;
+          const totalFields = m.isIEEE ? 7 : 6;
+          const progress = filledCount / totalFields;
+
           return (
-            <TiltWrapper key={i} className="glass p-5 rounded-xl" maxTilt={4} glare={false} scale={1.005}>
+            <TiltWrapper
+              key={i}
+              className="glass p-5 rounded-xl transition-all duration-350"
+              style={{
+                borderColor: progress > 0 ? `rgba(0, 240, 255, ${0.15 + progress * 0.85})` : undefined,
+                boxShadow: progress > 0 ? `0 0 ${progress * 24}px rgba(0, 240, 255, ${progress * 0.45})` : undefined
+              }}
+              maxTilt={4}
+              glare={false}
+              scale={1.005}
+            >
               <h3 className="font-display text-xl mb-4 text-cyan">
                 Member {i + 1}{" "}
                 {i === 0 && <span className="text-xs text-amber">(Team Leader)</span>}

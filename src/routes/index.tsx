@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { Phone, X, Plus, Lock, Mail } from "lucide-react";
@@ -15,25 +15,6 @@ import {
   saveProblemStatement,
   saveGalleryUrls,
 } from "@/lib/hackspirit-cloud";
-
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "HACKSPIRIT 2K26 — IEEE Student Branch Hackathon" },
-      {
-        name: "description",
-        content:
-          "Register for HACKSPIRIT 2K26 — a 6-hour college hackathon by IEEE Student Branch, NBKRIST. Open to all tech branches.",
-      },
-      { property: "og:title", content: "HACKSPIRIT 2K26 — Code. Create. Elevate." },
-      {
-        property: "og:description",
-        content: "IEEE Student Branch Hackathon at NBKRIST. Register your team now.",
-      },
-    ],
-  }),
-  component: LandingPage,
-});
 
 const fadeUp = {
   initial: { opacity: 0, y: 40 },
@@ -58,9 +39,20 @@ const CONTACTS = [
   },
 ];
 
-function LandingPage() {
+export default function LandingPage() {
   const navigate = useNavigate();
   const { setAdminAuth } = useApp();
+
+  useEffect(() => {
+    document.title = "HACKSPIRIT 2K26 — IEEE Student Branch Hackathon";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute(
+        "content",
+        "Register for HACKSPIRIT 2K26 — a 6-hour college hackathon by IEEE Student Branch, NBKRIST. Open to all tech branches."
+      );
+    }
+  }, []);
   const parallax = useMouseParallax(12); // degrees of drift for hero depth layers
   const [contactOpen, setContactOpen] = useState(false);
   const [hostPwOpen, setHostPwOpen] = useState(false);
@@ -223,7 +215,7 @@ function LandingPage() {
             transition={{ delay: 0.8 }}
             className="flex flex-wrap gap-3 justify-center mt-8"
           >
-            <button className="btn-primary" onClick={() => navigate({ to: "/register" })}>
+            <button className="btn-primary" onClick={() => navigate("/register")}>
               Start Registration
             </button>
             <button className="btn-outline" onClick={scrollToSchedule}>
@@ -384,10 +376,10 @@ function LandingPage() {
               desc: "Team verification and kit distribution",
             },
             { time: "09:30 AM", title: "Problem Reveal", desc: "Tracks and statements unlocked" },
-            { time: "10:00 AM", title: "Hack Starts", desc: "Build, code, iterate" },
-            { time: "01:00 PM", title: "Lunch Break", desc: "Refuel and refocus" },
-            { time: "04:00 PM", title: "Submissions Close", desc: "Final repo/demo deadline" },
-            { time: "05:00 PM", title: "Judging & Prizes", desc: "Expert panel evaluations" },
+            { time: "09:45 AM", title: "Hack Starts", desc: "Build, code, iterate" },
+            { time: "01:00 PM", title: "Games Start", desc: "Fun activities and refuel" },
+            { time: "02:30 PM", title: "Submissions Close", desc: "Final code/demo deadline" },
+            { time: "03:30 PM", title: "Judging & Prizes", desc: "Expert panel evaluations and awards" },
           ].map((item, i) => (
             <motion.div
               key={i}
@@ -547,7 +539,7 @@ function LandingPage() {
           sessionStorage.setItem("hackspirit_admin_session", "true");
           setAdminAuth(true);
           setAdminPwOpen(false);
-          navigate({ to: "/admin" });
+          navigate("/admin");
         }}
       />
       <PasswordModal

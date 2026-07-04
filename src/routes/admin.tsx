@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useMemo, useState, Fragment } from "react";
 import { ArrowLeft, Download, Trash2, ChevronDown, ChevronUp, X, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
@@ -13,16 +13,15 @@ import {
 import { GitHubExport } from "@/components/hackspirit/GitHubExport";
 import { TiltWrapper } from "@/components/hackspirit/TiltWrapper";
 
-export const Route = createFileRoute("/admin")({
-  head: () => ({ meta: [{ title: "Admin — HACKSPIRIT 2K26" }] }),
-  component: AdminPage,
-});
-
 const PAGE_SIZE = 10;
 
-function AdminPage() {
+export default function AdminPage() {
   const navigate = useNavigate();
   const { adminAuth, setAdminAuth } = useApp();
+
+  useEffect(() => {
+    document.title = "Admin — HACKSPIRIT 2K26";
+  }, []);
   const [regs, setRegs] = useState<Registration[]>([]);
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -44,7 +43,7 @@ function AdminPage() {
 
   useEffect(() => {
     if (!adminAuth && sessionStorage.getItem("hackspirit_admin_session") !== "true") {
-      navigate({ to: "/" });
+      navigate("/");
       return;
     }
     reload();
@@ -90,7 +89,7 @@ function AdminPage() {
   const logout = () => {
     sessionStorage.removeItem("hackspirit_admin_session");
     setAdminAuth(false);
-    navigate({ to: "/" });
+    navigate("/");
   };
 
   const pageRegs = regs.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE);

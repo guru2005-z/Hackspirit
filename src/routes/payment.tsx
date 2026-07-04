@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { ArrowLeft, Copy, Upload, Loader2 } from "lucide-react";
@@ -13,19 +13,17 @@ import {
 import { uploadToBucket, createRegistration } from "@/lib/hackspirit-cloud";
 import { TiltWrapper } from "@/components/hackspirit/TiltWrapper";
 
-export const Route = createFileRoute("/payment")({
-  head: () => ({
-    meta: [
-      { title: "Payment — HACKSPIRIT 2K26" },
-      { name: "description", content: "Complete payment for HACKSPIRIT 2K26 registration." },
-    ],
-  }),
-  component: PaymentPage,
-});
-
-function PaymentPage() {
+export default function PaymentPage() {
   const navigate = useNavigate();
   const { formData, calculatedFee, setCurrentRegistration } = useApp();
+
+  useEffect(() => {
+    document.title = "Payment — HACKSPIRIT 2K26";
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute("content", "Complete payment for HACKSPIRIT 2K26 registration.");
+    }
+  }, []);
   const [step, setStep] = useState(0);
   const [qrGenerated, setQrGenerated] = useState(false);
   const [screenshot, setScreenshot] = useState<{ file: File; preview: string } | null>(null);
@@ -125,7 +123,7 @@ function PaymentPage() {
         window.open(`https://wa.me/${ORGANIZER_PHONE}?text=${encodeURIComponent(waMsg)}`, "_blank");
       }
 
-      setTimeout(() => navigate({ to: "/success" }), 600);
+      setTimeout(() => navigate("/success"), 600);
     } catch (error: unknown) {
       toast.dismiss(t);
       console.error(error);

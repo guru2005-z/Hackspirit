@@ -1,4 +1,4 @@
-import { useRef, useState, type CSSProperties, type MouseEvent, type ReactNode } from "react";
+import { useRef, useState, type CSSProperties, type MouseEvent, type ReactNode, useEffect } from "react";
 
 interface TiltWrapperProps {
   children: ReactNode;
@@ -6,6 +6,7 @@ interface TiltWrapperProps {
   maxTilt?: number; // degrees
   glare?: boolean;
   scale?: number;
+  style?: CSSProperties; // External style prop (e.g. for dynamic glows)
 }
 
 /**
@@ -19,9 +20,10 @@ export function TiltWrapper({
   maxTilt = 10,
   glare = true,
   scale = 1.02,
+  style: externalStyle = {},
 }: TiltWrapperProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [style, setStyle] = useState<CSSProperties>({
+  const [tiltStyle, setTiltStyle] = useState<CSSProperties>({
     transform: "perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)",
     transition: "transform 0.4s ease",
   });
@@ -35,10 +37,12 @@ export function TiltWrapper({
     const py = (e.clientY - rect.top) / rect.height;
     const rotateY = (px - 0.5) * maxTilt * 2;
     const rotateX = (0.5 - py) * maxTilt * 2;
-    setStyle({
+    
+    setTiltStyle({
       transform: `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${scale},${scale},${scale})`,
       transition: "transform 0.05s linear",
     });
+    
     if (glare) {
       setGlareStyle({
         opacity: 0.12,
@@ -49,7 +53,7 @@ export function TiltWrapper({
   };
 
   const onMouseLeave = () => {
-    setStyle({
+    setTiltStyle({
       transform: "perspective(900px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)",
       transition: "transform 0.4s ease",
     });
@@ -61,7 +65,12 @@ export function TiltWrapper({
       ref={ref}
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      style={{ ...style, willChange: "transform", position: "relative" }}
+      style={{ 
+        ...tiltStyle, 
+        ...externalStyle, 
+        willChange: "transform", 
+        position: "relative" 
+      }}
       className={className}
     >
       {children}
