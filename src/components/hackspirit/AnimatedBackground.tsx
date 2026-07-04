@@ -129,7 +129,7 @@ function Stars() {
   );
 }
 
-// Scene controller managing scrolling grid, central tower bunch, and flowing side trees
+// Scene controller managing scrolling grid, widely spaced horizon towers, and outer flowing side trees
 function SceneContent() {
   const gridRef = useRef<THREE.GridHelper>(null);
   const centralGroupRef = useRef<THREE.Group>(null);
@@ -141,28 +141,30 @@ function SceneContent() {
 
   const neonColors = ["#f97316", "#a855f7", "#00f0ff", "#14b8a6", "#3b82f6", "#eab308"];
 
-  // 1. Tightly grouped central towers sitting on the horizon (Bunch)
-  const centralTowers = useMemo(() => {
+  // 1. Spaced out background towers spanning across the horizon width (Separate, Separate)
+  const horizonTowers = useMemo(() => {
     return [
       { id: 0, x: 0, z: -13.0, color: "#3b82f6", height: 3.4, radius: 1.05 },     // Center - Tall Royal Blue
-      { id: 1, x: -1.2, z: -12.5, color: "#a855f7", height: 2.8, radius: 0.85 },  // Left-Center - Violet
-      { id: 2, x: 1.2, z: -12.5, color: "#f97316", height: 2.5, radius: 0.75 },   // Right-Center - Orange
-      { id: 3, x: -2.2, z: -13.4, color: "#eab308", height: 2.0, radius: 0.65 },  // Far Left - Yellow/Gold
-      { id: 4, x: 2.2, z: -13.4, color: "#14b8a6", height: 2.2, radius: 0.70 }    // Far Right - Teal
+      { id: 1, x: -2.2, z: -14.0, color: "#a855f7", height: 2.8, radius: 0.85 },  // Left Mid - Violet
+      { id: 2, x: 2.2, z: -14.0, color: "#f97316", height: 2.5, radius: 0.75 },   // Right Mid - Orange
+      { id: 3, x: -4.5, z: -12.5, color: "#eab308", height: 2.0, radius: 0.65 },  // Left Out - Yellow/Gold
+      { id: 4, x: 4.5, z: -12.5, color: "#14b8a6", height: 2.2, radius: 0.70 },   // Right Out - Teal
+      { id: 5, x: -6.8, z: -13.5, color: "#00f0ff", height: 3.1, radius: 0.95 },  // Far Left - Cyan
+      { id: 6, x: 6.8, z: -13.5, color: "#d946ef", height: 2.9, radius: 0.90 }    // Far Right - Magenta
     ];
   }, []);
 
-  // 2. Side-scrolling trees that fly past on the left and right (Flow)
+  // 2. Outer side-scrolling trees that fly past on the margins (Flow)
   const scrollingTowers = useMemo(() => {
     const arr: ScrollingTreeData[] = [];
     const count = 10;
 
     for (let i = 0; i < count; i++) {
       const isLeft = i % 2 === 0;
-      // Distribute x positions strictly outside the center grid path
+      // Position strictly outside the horizon towers path (x <= -8.8 or x >= 8.8)
       const x = isLeft
-        ? -3.8 - Math.random() * 4.5
-        : 3.8 + Math.random() * 4.5;
+        ? -8.8 - Math.random() * 4.0
+        : 8.8 + Math.random() * 4.0;
       
       const z = (Math.random() - 0.8) * forestLength; // distribute from camera to horizon
       const color = neonColors[i % neonColors.length];
@@ -182,11 +184,11 @@ function SceneContent() {
       gridRef.current.position.z = (time * speed) % gridCellSpacing;
     }
 
-    // B. Animate central towers in place (Y-rotation & vertical float - Central Bunch Flow)
+    // B. Animate horizon towers in place (Y-rotation & vertical float - Horizon Flow)
     if (centralGroupRef.current) {
       const children = centralGroupRef.current.children;
-      for (let i = 0; i < centralTowers.length; i++) {
-        const tower = centralTowers[i];
+      for (let i = 0; i < horizonTowers.length; i++) {
+        const tower = horizonTowers[i];
         const mesh = children[i] as THREE.Group;
         if (!mesh) continue;
 
@@ -198,7 +200,7 @@ function SceneContent() {
       }
     }
 
-    // C. Scroll side towers towards the camera (Side Flow)
+    // C. Scroll side towers towards the camera (Outer Side Flow)
     if (scrollingGroupRef.current) {
       const children = scrollingGroupRef.current.children;
       for (let i = 0; i < scrollingTowers.length; i++) {
@@ -211,11 +213,11 @@ function SceneContent() {
         // Wrap side tower back to horizon if it passes behind the camera
         if (tower.z > 6.0) {
           tower.z = -forestLength;
-          // Randomize side position slightly for organic variety
+          // Reposition to outer margins
           const isLeft = i % 2 === 0;
           tower.x = isLeft
-            ? -3.8 - Math.random() * 4.5
-            : 3.8 + Math.random() * 4.5;
+            ? -8.8 - Math.random() * 4.0
+            : 8.8 + Math.random() * 4.0;
         }
 
         mesh.position.z = tower.z;
@@ -244,11 +246,11 @@ function SceneContent() {
         position={[0, -3.2, 0]}
       />
 
-      {/* 1. Central grouped towers (Bunch) */}
+      {/* 1. Spaced out horizon towers (Bunch) */}
       <group ref={centralGroupRef}>
-        {centralTowers.map((t) => (
+        {horizonTowers.map((t) => (
           <WireframeTree
-            key={`central-${t.id}`}
+            key={`horizon-${t.id}`}
             position={[t.x, -3.2 + t.height / 2, t.z]}
             color={t.color}
             height={t.height}
