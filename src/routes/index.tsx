@@ -207,7 +207,7 @@ export default function LandingPage() {
             className="text-muted max-w-2xl mx-auto mt-6 text-sm sm:text-base"
           >
             A 6-hour sprint where bold ideas become working prototypes. Build something brilliant
-            with your team, get expert feedback, and walk away with prizes and certificates.
+            with your team, get expert feedback, and walk away with ₹10K prize money & certificates.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -297,7 +297,7 @@ export default function LandingPage() {
               title: "Expert Evaluations",
               desc: "Industry mentors judge every project",
             },
-            { icon: "🎁", title: "Prizes & Certificates", desc: "For winners and participants" },
+            { icon: "🎁", title: "₹10K Prize Money", desc: "For top performers and participants" },
           ].map((h, i) => (
             <motion.div
               key={i}
