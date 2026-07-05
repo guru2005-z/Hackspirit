@@ -72,6 +72,12 @@ export default function SuccessPage() {
           <span className="text-muted">Amount Paid</span>
           <span className="text-amber">₹{r.totalFee}</span>
         </div>
+        {r.transactionId && (
+          <div className="flex justify-between">
+            <span className="text-muted">Transaction ID</span>
+            <span className="font-mono text-xs text-cyan">{r.transactionId}</span>
+          </div>
+        )}
         <div className="flex justify-between">
           <span className="text-muted">Registration ID</span>
           <span className="font-mono text-xs">{r.id}</span>
@@ -79,15 +85,18 @@ export default function SuccessPage() {
       </TiltWrapper>
 
       <div className="flex gap-3 mt-8 flex-wrap justify-center">
-        <Link to="/" className="btn-primary">
+        <button
+          onClick={() => {
+            const message = `🎯 *HACKSPIRIT 2K26 – Payment Receipt & Details!*\n\nTeam Name: ${r.teamName}\nRegistration ID: ${r.id}\nAmount Paid: ₹${r.totalFee}\nTransaction ID: ${r.transactionId}\n\n📎 Payment Screenshot Link:\n${r.paymentScreenshotBase64}\n\nPlease confirm our registration.`;
+            window.open(`https://wa.me/${ORGANIZER_PHONE}?text=${encodeURIComponent(message)}`, "_blank");
+          }}
+          className="btn-primary inline-flex items-center gap-2"
+        >
+          💬 Share Details on WhatsApp
+        </button>
+        <Link to="/" className="btn-outline">
           🏠 Back to Home
         </Link>
-        <button
-          onClick={() => window.open(`https://wa.me/${ORGANIZER_PHONE}`, "_blank")}
-          className="btn-outline"
-        >
-          📱 Contact Organizer
-        </button>
       </div>
     </div>
   );
