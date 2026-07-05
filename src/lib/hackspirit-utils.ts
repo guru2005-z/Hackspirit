@@ -11,7 +11,7 @@ export function getFeeBreakdown(members: Member[], teamSize: number): string[] {
 }
 
 export function buildUPIString(teamName: string, amount: number): string {
-  return `upi://pay?pa=9491501919-2@axl&pn=HACKSPIRIT+IEEE&am=${amount}&cu=INR&tn=HACKSPIRIT+${encodeURIComponent(teamName)}`;
+  return `upi://pay?pa=9441759500@upi&pn=HACKSPIRIT+IEEE&am=${amount}&cu=INR&tn=HACKSPIRIT+${encodeURIComponent(teamName)}`;
 }
 
 export function buildRegistrationMessage(formData: FormData, totalFee: number): string {

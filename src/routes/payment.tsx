@@ -48,7 +48,7 @@ export default function PaymentPage() {
   }
 
   const upiString = buildUPIString(formData.teamName, calculatedFee);
-  const upiId = "9491501919-2@axl";
+  const upiId = "9441759500@upi";
 
   const handleGenerateQR = () => {
     setQrGenerated(true);
