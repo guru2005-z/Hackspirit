@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { Phone, X, Plus, Lock, Mail } from "lucide-react";
 import toast from "react-hot-toast";
@@ -56,6 +56,7 @@ export default function LandingPage() {
   const parallax = useMouseParallax(12); // degrees of drift for hero depth layers
   const [contactOpen, setContactOpen] = useState(false);
   const [hostPwOpen, setHostPwOpen] = useState(false);
+  const [hostActionsOpen, setHostActionsOpen] = useState(false);
   const [adminPwOpen, setAdminPwOpen] = useState(false);
   const [galleryPwOpen, setGalleryPwOpen] = useState(false);
   const [expired, setExpired] = useState(false);
@@ -525,14 +526,82 @@ export default function LandingPage() {
       <PasswordModal
         open={hostPwOpen}
         onClose={() => setHostPwOpen(false)}
-        title="Host Upload"
+        title="Host Password"
         onSuccess={async () => {
           setHostPwOpen(false);
           if (pdfUrl) {
-            if (confirm("A PDF is already published. Replace it?")) pdfInputRef.current?.click();
-          } else pdfInputRef.current?.click();
+            setHostActionsOpen(true);
+          } else {
+            pdfInputRef.current?.click();
+          }
         }}
       />
+
+      <AnimatePresence>
+        {hostActionsOpen && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="glass p-6 w-full max-w-sm relative text-center"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+              <button
+                onClick={() => setHostActionsOpen(false)}
+                className="absolute top-3 right-3 text-muted hover:text-white"
+              >
+                <X size={20} />
+              </button>
+              <h3 className="font-display text-xl mb-4 gradient-text">Manage Problem Statement</h3>
+              <p className="text-muted text-sm mb-6">
+                Choose an action for the currently published PDF statement.
+              </p>
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => {
+                    setHostActionsOpen(false);
+                    pdfInputRef.current?.click();
+                  }}
+                  className="btn-primary w-full"
+                >
+                  📤 Upload / Replace PDF
+                </button>
+                <button
+                  onClick={async () => {
+                    if (confirm("Are you sure you want to delete the current problem statement?")) {
+                      const t = toast.loading("Deleting problem statement...");
+                      try {
+                        await saveProblemStatement(null);
+                        setPdfUrl(null);
+                        toast.dismiss(t);
+                        toast.success("Problem statement deleted successfully! ✓");
+                        setHostActionsOpen(false);
+                      } catch (err: any) {
+                        toast.dismiss(t);
+                        toast.error(err?.message || "Failed to delete");
+                      }
+                    }
+                  }}
+                  className="btn-outline border-red-500 hover:bg-red-500/20 text-red-400 w-full"
+                >
+                  🗑️ Delete PDF Statement
+                </button>
+                <button
+                  onClick={() => setHostActionsOpen(false)}
+                  className="btn-outline w-full mt-2"
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <PasswordModal
         open={adminPwOpen}
         onClose={() => setAdminPwOpen(false)}
