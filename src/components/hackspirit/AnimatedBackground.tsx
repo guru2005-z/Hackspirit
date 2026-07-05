@@ -242,7 +242,7 @@ function SceneContent() {
       {/* Cyber Grid Plane on the ground */}
       <gridHelper
         ref={gridRef}
-        args={[80, 40, "#00f0ff", "#083344"]}
+        args={[80, 40, "#083344", "#083344"]}
         position={[0, -3.2, 0]}
       />
 
