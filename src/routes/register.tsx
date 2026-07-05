@@ -5,7 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
 import { useApp, emptyMember, type Member } from "@/lib/AppContext";
 import { calculateFee, getFeeBreakdown } from "@/lib/hackspirit-utils";
-import { teamNameExists } from "@/lib/hackspirit-cloud";
+import { teamNameExists, fetchSettings } from "@/lib/hackspirit-cloud";
 import { TiltWrapper } from "@/components/hackspirit/TiltWrapper";
 
 const BRANCHES = [
@@ -26,6 +26,8 @@ export default function RegisterPage() {
   const navigate = useNavigate();
   const { formData, setFormData, setCalculatedFee } = useApp();
   const [errorField, setErrorField] = useState<string>("");
+  const [regOpen, setRegOpen] = useState(true);
+  const [loadingSettings, setLoadingSettings] = useState(true);
 
   useEffect(() => {
     document.title = "Register — HACKSPIRIT 2K26";
@@ -33,6 +35,15 @@ export default function RegisterPage() {
     if (metaDesc) {
       metaDesc.setAttribute("content", "Register your team for HACKSPIRIT 2K26. ₹100/IEEE member, ₹150/non-IEEE.");
     }
+    fetchSettings()
+      .then((s) => {
+        setRegOpen(s.registration_open);
+        setLoadingSettings(false);
+      })
+      .catch((e) => {
+        console.warn("settings fetch failed", e);
+        setLoadingSettings(false);
+      });
   }, []);
 
   const total = useMemo(() => calculateFee(formData.members, formData.teamSize), [formData]);
@@ -97,6 +108,31 @@ export default function RegisterPage() {
   };
 
   const fieldErr = (k: string) => errorField === k;
+
+  if (loadingSettings) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#070512]">
+        <div className="w-8 h-8 border-2 border-cyan border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!regOpen) {
+    return (
+      <div className="min-h-screen px-4 py-8 flex flex-col items-center justify-center max-w-md mx-auto text-center">
+        <TiltWrapper className="glass p-8 rounded-2xl w-full" maxTilt={5}>
+          <div className="text-5xl mb-4">🛑</div>
+          <h1 className="font-display text-2xl sm:text-3xl gradient-text mb-4">Registration Closed</h1>
+          <p className="text-muted text-sm mb-6">
+            Live registration for HACKSPIRIT 2K26 is currently closed by the organizers. If you have any queries, please reach out via the contact options on the home page.
+          </p>
+          <Link to="/" className="btn-primary inline-block w-full">
+            ← Back to Homepage
+          </Link>
+        </TiltWrapper>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen px-4 py-8 max-w-5xl mx-auto">

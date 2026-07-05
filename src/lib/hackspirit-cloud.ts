@@ -87,6 +87,7 @@ export type EventSettings = {
   problem_statement_url: string | null;
   problem_statement_uploaded_at: string | null;
   gallery_urls: (string | null)[];
+  registration_open: boolean;
 };
 
 export async function fetchSettings(): Promise<EventSettings> {
@@ -97,6 +98,7 @@ export async function fetchSettings(): Promise<EventSettings> {
     gallery_urls: Array.isArray(data?.gallery_urls)
       ? data.gallery_urls.map((item) => (typeof item === "string" ? item : null))
       : [null, null, null],
+    registration_open: data?.registration_open ?? true,
   };
 }
 
@@ -113,6 +115,14 @@ export async function saveGalleryUrls(urls: (string | null)[]) {
   const { error } = await supabase.from("event_settings").upsert({
     id: 1,
     gallery_urls: urls as Json,
+  });
+  if (error) throw error;
+}
+
+export async function toggleLiveRegistration(open: boolean) {
+  const { error } = await supabase.from("event_settings").upsert({
+    id: 1,
+    registration_open: open,
   });
   if (error) throw error;
 }
