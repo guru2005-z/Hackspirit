@@ -110,42 +110,12 @@ function MainLayout() {
     audioRef.current = audio;
     audio.load();
 
-    let played = false;
-    const playBGM = () => {
-      if (played) return;
-      audio.play().then(() => {
-        played = true;
-        cleanupListeners();
-      }).catch((e) => {
-        console.warn("BGM autoplay blocked:", e);
-      });
-    };
-
-    const cleanupListeners = () => {
-      window.removeEventListener("mousemove", playBGM);
-      window.removeEventListener("keydown", playBGM);
-      window.removeEventListener("touchstart", playBGM);
-      window.removeEventListener("scroll", playBGM);
-      window.removeEventListener("mousedown", playBGM);
-    };
-
-    // Micro-interaction triggers to bypass strict browser autoplay limits
-    window.addEventListener("mousemove", playBGM);
-    window.addEventListener("keydown", playBGM);
-    window.addEventListener("touchstart", playBGM);
-    window.addEventListener("scroll", playBGM);
-    window.addEventListener("mousedown", playBGM);
-
-    // Direct autoplay attempt
-    audio.play().then(() => {
-      played = true;
-      cleanupListeners();
-    }).catch((e) => {
-      console.warn("Direct BGM autoplay blocked, waiting for interaction...");
+    // Direct autoplay attempt in case it's already allowed by browser MEI
+    audio.play().catch((e) => {
+      console.warn("Direct autoplay blocked, waiting for user activation splash screen");
     });
 
     return () => {
-      cleanupListeners();
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -153,13 +123,23 @@ function MainLayout() {
     };
   }, []);
 
+  const playBGM = () => {
+    if (audioRef.current) {
+      audioRef.current.play().catch((e) => {
+        console.warn("BGM play failed:", e);
+      });
+    }
+  };
+
   return (
     <>
       <AnimatedBackground />
       <div className="bg-blob bg-blob-1" />
       <div className="bg-blob bg-blob-2" />
       <AnimatePresence>
-        {showIntro && <IntroAnimation onDone={() => setShowIntro(false)} />}
+        {showIntro && (
+          <IntroAnimation onPlayBGM={playBGM} onDone={() => setShowIntro(false)} />
+        )}
       </AnimatePresence>
       <div id="app-content">
         <Routes>
