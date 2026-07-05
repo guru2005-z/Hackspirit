@@ -95,70 +95,13 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
 function MainLayout() {
   const [showIntro, setShowIntro] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (!sessionStorage.getItem("hackspirit_intro_seen")) {
       setShowIntro(true);
       sessionStorage.setItem("hackspirit_intro_seen", "true");
     }
-
-    // Set up global background music loop
-    const audio = new Audio("/intro_sound.mp3");
-    audio.volume = 0.85;
-    audio.loop = false;
-    audioRef.current = audio;
-    audio.load();
-
-    let played = false;
-    const playIntroSound = () => {
-      if (played) return;
-      audio.play().then(() => {
-        played = true;
-        cleanupListeners();
-      }).catch((e) => {
-        console.warn("BGM autoplay blocked:", e);
-      });
-    };
-
-    const cleanupListeners = () => {
-      window.removeEventListener("mousemove", playIntroSound);
-      window.removeEventListener("keydown", playIntroSound);
-      window.removeEventListener("touchstart", playIntroSound);
-      window.removeEventListener("scroll", playIntroSound);
-      window.removeEventListener("mousedown", playIntroSound);
-    };
-
-    // Micro-interaction triggers to bypass strict browser autoplay limits
-    window.addEventListener("mousemove", playIntroSound);
-    window.addEventListener("keydown", playIntroSound);
-    window.addEventListener("touchstart", playIntroSound);
-    window.addEventListener("scroll", playIntroSound);
-    window.addEventListener("mousedown", playIntroSound);
-
-    // Direct autoplay attempt
-    audio.play().then(() => {
-      played = true;
-      cleanupListeners();
-    }).catch((e) => {
-      console.warn("Direct BGM autoplay blocked, waiting for interaction...");
-    });
-
-    return () => {
-      cleanupListeners();
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-    };
   }, []);
-
-  // Pause audio when intro is dismissed
-  useEffect(() => {
-    if (!showIntro && audioRef.current) {
-      audioRef.current.pause();
-    }
-  }, [showIntro]);
 
   return (
     <>

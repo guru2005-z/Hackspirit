@@ -1,11 +1,53 @@
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export function IntroAnimation({ onDone }: { onDone: () => void }) {
   const [typed, setTyped] = useState("");
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const full = "CODE. CREATE. ELEVATE.";
 
   useEffect(() => {
+    // Instantiate and preload the audio file immediately on mount
+    const audio = new Audio("/intro_sound.mp3");
+    audio.volume = 0.85;
+    audio.loop = false; // play only once during the intro animation
+    audioRef.current = audio;
+    audio.load();
+
+    let played = false;
+    const playIntroSound = () => {
+      if (played) return;
+      audio.play().then(() => {
+        played = true;
+        cleanupListeners();
+      }).catch((e) => {
+        console.warn("Autoplay blocked by browser. Waiting for interaction...", e);
+      });
+    };
+
+    const cleanupListeners = () => {
+      window.removeEventListener("mousemove", playIntroSound);
+      window.removeEventListener("keydown", playIntroSound);
+      window.removeEventListener("touchstart", playIntroSound);
+      window.removeEventListener("scroll", playIntroSound);
+      window.removeEventListener("mousedown", playIntroSound);
+    };
+
+    // Listen for any micro-interaction to start playback
+    window.addEventListener("mousemove", playIntroSound);
+    window.addEventListener("keydown", playIntroSound);
+    window.addEventListener("touchstart", playIntroSound);
+    window.addEventListener("scroll", playIntroSound);
+    window.addEventListener("mousedown", playIntroSound);
+
+    // Direct autoplay attempt
+    audio.play().then(() => {
+      played = true;
+      cleanupListeners();
+    }).catch((e) => {
+      console.warn("Direct autoplay blocked, waiting for micro-interaction...");
+    });
+
     // Start typing after 1.2s when the eyes are fully open
     const startTyping = setTimeout(() => {
       let i = 0;
@@ -21,8 +63,13 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
     const exit = setTimeout(onDone, 4400);
 
     return () => {
+      cleanupListeners();
       clearTimeout(startTyping);
       clearTimeout(exit);
+      if (audioRef.current) {
+        audioRef.current.pause(); // Stop playing when the page slides out
+        audioRef.current = null;
+      }
     };
   }, [onDone]);
 
