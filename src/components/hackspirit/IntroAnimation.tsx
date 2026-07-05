@@ -3,9 +3,68 @@ import { useEffect, useState } from "react";
 
 export function IntroAnimation({ onDone }: { onDone: () => void }) {
   const [typed, setTyped] = useState("");
+  const [soundPlayed, setSoundPlayed] = useState(false);
   const full = "CODE. CREATE. ELEVATE.";
 
+  const playIntroSound = () => {
+    if (soundPlayed) return;
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      setSoundPlayed(true);
+
+      // Low power-up cyber sweep
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      const filter = ctx.createBiquadFilter();
+
+      osc.type = "sawtooth";
+      osc.frequency.setValueAtTime(35, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(750, ctx.currentTime + 1.2);
+
+      filter.type = "lowpass";
+      filter.frequency.setValueAtTime(90, ctx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(1600, ctx.currentTime + 1.2);
+      filter.Q.value = 6;
+
+      gain.gain.setValueAtTime(0.001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.18, ctx.currentTime + 0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.3);
+
+      osc.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+
+      // High digital scanner pulse
+      const scanningOsc = ctx.createOscillator();
+      const scanningGain = ctx.createGain();
+
+      scanningOsc.type = "sine";
+      scanningOsc.frequency.setValueAtTime(90, ctx.currentTime);
+      scanningOsc.frequency.setValueAtTime(140, ctx.currentTime + 0.4);
+
+      scanningGain.gain.setValueAtTime(0.001, ctx.currentTime);
+      scanningGain.gain.exponentialRampToValueAtTime(0.08, ctx.currentTime + 0.2);
+      scanningGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.4);
+
+      scanningOsc.connect(scanningGain);
+      scanningGain.connect(ctx.destination);
+
+      osc.start();
+      osc.stop(ctx.currentTime + 1.4);
+
+      scanningOsc.start();
+      scanningOsc.stop(ctx.currentTime + 1.5);
+    } catch (e) {
+      console.warn("Autoplay audio blocked", e);
+    }
+  };
+
   useEffect(() => {
+    // Attempt startup sweep immediately on mount
+    playIntroSound();
+
     // Start typing after 1.2s when the eyes are fully open
     const startTyping = setTimeout(() => {
       let i = 0;
@@ -24,11 +83,12 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
       clearTimeout(startTyping);
       clearTimeout(exit);
     };
-  }, [onDone]);
+  }, [onDone, soundPlayed]);
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black overflow-hidden"
+      onClick={playIntroSound}
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black overflow-hidden cursor-pointer"
       initial={{ y: 0 }}
       exit={{ y: "-100vh" }}
       transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }} // smooth sliding transition
