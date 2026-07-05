@@ -3,29 +3,34 @@ import { useEffect, useState, useRef } from "react";
 
 export function IntroAnimation({ onDone }: { onDone: () => void }) {
   const [typed, setTyped] = useState("");
-  const [soundPlayed, setSoundPlayed] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const full = "CODE. CREATE. ELEVATE.";
 
   const playIntroSound = () => {
-    if (soundPlayed) return;
-    try {
-      setSoundPlayed(true);
-      const audio = new Audio("/intro_sound.mp3");
-      audio.volume = 0.85;
-      audioRef.current = audio;
-      audio.play().catch((e) => {
-        console.warn("Autoplay audio blocked by browser settings", e);
-        setSoundPlayed(false); // reset so a subsequent click/tap can try playing it again
-      });
-    } catch (e) {
-      console.warn("Audio play failed", e);
+    if (audioRef.current) {
+      audioRef.current.play()
+        .then(() => {
+          setIsMuted(false);
+        })
+        .catch((e) => {
+          console.warn("Play on click failed:", e);
+        });
     }
   };
 
   useEffect(() => {
-    // Attempt startup sweep immediately on mount
-    playIntroSound();
+    // Instantiate and preload the audio file immediately on mount
+    const audio = new Audio("/intro_sound.mp3");
+    audio.volume = 0.85;
+    audioRef.current = audio;
+    audio.load();
+
+    // Attempt autoplay immediately
+    audio.play().catch((e) => {
+      console.warn("Autoplay blocked by browser. Displaying click bypass hint.", e);
+      setIsMuted(true);
+    });
 
     // Start typing after 1.2s when the eyes are fully open
     const startTyping = setTimeout(() => {
@@ -49,12 +54,12 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
         audioRef.current = null;
       }
     };
-  }, [onDone, soundPlayed]);
+  }, [onDone]);
 
   return (
     <motion.div
       onClick={playIntroSound}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black overflow-hidden cursor-pointer"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black overflow-hidden cursor-pointer select-none"
       initial={{ y: 0 }}
       exit={{ y: "-100vh" }}
       transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }} // smooth sliding transition
@@ -150,6 +155,18 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
       >
         IEEE Student Branch | NBKRIST
       </motion.p>
+
+      {/* Autoplay Unmute Hint Banner */}
+      {isMuted && (
+        <motion.div
+          className="absolute bottom-16 text-cyan/70 text-xs font-display tracking-[0.2em] pointer-events-none px-4 py-2 border border-cyan/20 rounded-full glass bg-black/40"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: [0.3, 1, 0.3], y: 0 }}
+          transition={{ repeat: Infinity, duration: 1.8, ease: "easeInOut" }}
+        >
+          🔊 CLICK ANYWHERE FOR SOUND
+        </motion.div>
+      )}
     </motion.div>
   );
 }
