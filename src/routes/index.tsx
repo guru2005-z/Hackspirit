@@ -153,41 +153,10 @@ export default function LandingPage() {
           alt="NBKR Institute of Science and Technology Logo"
           className="h-10 sm:h-14 w-auto object-contain"
         />
-        <div className="flex items-center gap-3">
-          <div className="glass px-3 py-1.5 flex items-center gap-2 text-xs">
-            <span className={`w-2 h-2 rounded-full ${regOpen ? "bg-success animate-pulse" : "bg-red-500"}`} />
-            <span className="hidden sm:inline">{regOpen ? "LIVE REGISTRATION OPEN" : "REGISTRATION CLOSED"}</span>
-            <span className="sm:hidden">{regOpen ? "LIVE" : "CLOSED"}</span>
-          </div>
-          {adminSession && (
-            <button
-              onClick={async () => {
-                const next = !regOpen;
-                const confirmMsg = next 
-                  ? "Are you sure you want to REOPEN live registration?" 
-                  : "Are you sure you want to CLOSE live registration? This will prevent new team signups.";
-                if (confirm(confirmMsg)) {
-                  const t = toast.loading("Updating status...");
-                  try {
-                    await toggleLiveRegistration(next);
-                    setRegOpen(next);
-                    toast.dismiss(t);
-                    toast.success(next ? "Registration opened! ✓" : "Registration closed! 🛑");
-                  } catch (err: any) {
-                    toast.dismiss(t);
-                    toast.error(err?.message || "Failed to update registration status");
-                  }
-                }
-              }}
-              className={`px-3 py-1 rounded text-xs font-bold transition ${
-                regOpen 
-                  ? "bg-red-500/20 hover:bg-red-500/35 text-red-300 border border-red-500/50" 
-                  : "bg-success/20 hover:bg-success/35 text-green-300 border border-success/50"
-              }`}
-            >
-              {regOpen ? "🛑 Stop Reg" : "▶️ Start Reg"}
-            </button>
-          )}
+        <div className="glass px-3 py-1.5 flex items-center gap-2 text-xs">
+          <span className={`w-2 h-2 rounded-full ${regOpen ? "bg-success animate-pulse" : "bg-red-500"}`} />
+          <span className="hidden sm:inline">{regOpen ? "LIVE REGISTRATION OPEN" : "REGISTRATION CLOSED"}</span>
+          <span className="sm:hidden">{regOpen ? "LIVE" : "CLOSED"}</span>
         </div>
         <img
           src="/college-logo.png"

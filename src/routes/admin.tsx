@@ -9,6 +9,8 @@ import {
   fetchAllRegistrations,
   toggleRegistrationStatus,
   deleteAllRegistrations,
+  fetchSettings,
+  toggleLiveRegistration,
 } from "@/lib/hackspirit-cloud";
 import { GitHubExport } from "@/components/hackspirit/GitHubExport";
 import { TiltWrapper } from "@/components/hackspirit/TiltWrapper";
@@ -30,6 +32,7 @@ export default function AdminPage() {
   const [confirmText, setConfirmText] = useState("");
   const [previewImg, setPreviewImg] = useState<string | null>(null);
   const [githubOpen, setGithubOpen] = useState(false);
+  const [regOpen, setRegOpen] = useState(true);
 
   const reload = async () => {
     setLoading(true);
@@ -46,6 +49,11 @@ export default function AdminPage() {
       navigate("/");
       return;
     }
+    fetchSettings()
+      .then((s) => {
+        setRegOpen(s.registration_open);
+      })
+      .catch((e) => console.warn("failed to fetch settings", e));
     reload();
   }, [adminAuth, navigate]);
 
@@ -99,7 +107,36 @@ export default function AdminPage() {
     <div className="min-h-screen px-4 py-6 max-w-7xl mx-auto">
       <div className="flex justify-between items-center flex-wrap gap-3 mb-6">
         <h1 className="font-display text-xl sm:text-3xl gradient-text">🔐 HACKSPIRIT Admin</h1>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap items-center">
+          {/* Registration Open/Closed control */}
+          <button
+            onClick={async () => {
+              const next = !regOpen;
+              const confirmMsg = next 
+                ? "Are you sure you want to REOPEN live registration?" 
+                : "Are you sure you want to CLOSE live registration? This will prevent new team signups.";
+              if (confirm(confirmMsg)) {
+                const t = toast.loading("Updating status...");
+                try {
+                  await toggleLiveRegistration(next);
+                  setRegOpen(next);
+                  toast.dismiss(t);
+                  toast.success(next ? "Registration opened! ✓" : "Registration closed! 🛑");
+                } catch (err: any) {
+                  toast.dismiss(t);
+                  toast.error(err?.message || "Failed to update registration status");
+                }
+              }
+            }}
+            className={`btn-outline !py-2 transition font-bold ${
+              regOpen 
+                ? "bg-red-500/10 text-red-400 border-red-500/40 hover:bg-red-500/20" 
+                : "bg-success/10 text-green-300 border-success/40 hover:bg-success/20"
+            }`}
+          >
+            {regOpen ? "🛑 Stop Registration" : "▶️ Start Registration"}
+          </button>
+
           <button onClick={reload} className="btn-outline !py-2">
             <RefreshCw size={14} />
             Refresh
