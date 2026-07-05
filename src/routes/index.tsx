@@ -128,9 +128,11 @@ export default function LandingPage() {
       await saveGalleryUrls(next);
       toast.dismiss(t);
       toast.success("Image uploaded");
-    } catch (error: unknown) {
+    } catch (error: any) {
       toast.dismiss(t);
-      toast.error(error instanceof Error ? error.message : "Upload failed");
+      console.error("Gallery upload error:", error);
+      const errMsg = error?.message || (typeof error === "string" ? error : "Upload failed");
+      toast.error(errMsg);
     }
     e.target.value = "";
   };
