@@ -1,20 +1,11 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
-export function IntroAnimation({
-  onPlayBGM,
-  onDone,
-}: {
-  onPlayBGM: () => void;
-  onDone: () => void;
-}) {
+export function IntroAnimation({ onDone }: { onDone: () => void }) {
   const [typed, setTyped] = useState("");
-  const [started, setStarted] = useState(false);
   const full = "CODE. CREATE. ELEVATE.";
 
   useEffect(() => {
-    if (!started) return;
-
     // Start typing after 1.2s when the eyes are fully open
     const startTyping = setTimeout(() => {
       let i = 0;
@@ -33,60 +24,7 @@ export function IntroAnimation({
       clearTimeout(startTyping);
       clearTimeout(exit);
     };
-  }, [started, onDone]);
-
-  if (!started) {
-    return (
-      <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black overflow-hidden select-none">
-        {/* Star particles */}
-        {Array.from({ length: 24 }).map((_, i) => (
-          <span
-            key={i}
-            className="absolute w-[2px] h-[2px] rounded-full bg-cyan/40 animate-pulse"
-            style={{
-              top: `${Math.random() * 100}%`,
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 2}s`,
-            }}
-          />
-        ))}
-
-        {/* Splash Card */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.0 }}
-          className="text-center z-10 px-4 flex flex-col items-center"
-        >
-          <div className="flex justify-center mb-6">
-            <img
-              src="/college-logo.png"
-              className="h-16 w-auto opacity-70 filter drop-shadow-[0_0_8px_rgba(6,182,212,0.5)]"
-              alt="IEEE SB Logo"
-            />
-          </div>
-
-          <h1 className="font-display font-black gradient-text tracking-widest text-4xl sm:text-6xl mb-2 animate-pulse">
-            HACKSPIRIT
-          </h1>
-          <p className="text-muted text-xs sm:text-sm tracking-[0.3em] uppercase mb-12">
-            IEEE Student Branch | NBKRIST
-          </p>
-
-          <button
-            onClick={() => {
-              onPlayBGM();
-              setStarted(true);
-            }}
-            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-violet/20 to-cyan/20 border-2 border-cyan/40 rounded-xl text-white font-display text-sm tracking-widest hover:border-cyan hover:bg-gradient-to-r hover:from-violet/40 hover:to-cyan/40 transition-all duration-300 shadow-[0_0_15px_rgba(6,182,212,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.35)]"
-          >
-            <span>INITIALIZE EXPERIENCE</span>
-            <span className="text-cyan group-hover:scale-125 transition-transform duration-300">🔊</span>
-          </button>
-        </motion.div>
-      </div>
-    );
-  }
+  }, [onDone]);
 
   return (
     <motion.div

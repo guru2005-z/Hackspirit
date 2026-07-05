@@ -105,17 +105,47 @@ function MainLayout() {
 
     // Set up global background music loop
     const audio = new Audio("/intro_sound.mp3");
-    audio.volume = 0.6;
-    audio.loop = true;
+    audio.volume = 0.85;
+    audio.loop = false;
     audioRef.current = audio;
     audio.load();
 
-    // Direct autoplay attempt in case it's already allowed by browser MEI
-    audio.play().catch((e) => {
-      console.warn("Direct autoplay blocked, waiting for user activation splash screen");
+    let played = false;
+    const playIntroSound = () => {
+      if (played) return;
+      audio.play().then(() => {
+        played = true;
+        cleanupListeners();
+      }).catch((e) => {
+        console.warn("BGM autoplay blocked:", e);
+      });
+    };
+
+    const cleanupListeners = () => {
+      window.removeEventListener("mousemove", playIntroSound);
+      window.removeEventListener("keydown", playIntroSound);
+      window.removeEventListener("touchstart", playIntroSound);
+      window.removeEventListener("scroll", playIntroSound);
+      window.removeEventListener("mousedown", playIntroSound);
+    };
+
+    // Micro-interaction triggers to bypass strict browser autoplay limits
+    window.addEventListener("mousemove", playIntroSound);
+    window.addEventListener("keydown", playIntroSound);
+    window.addEventListener("touchstart", playIntroSound);
+    window.addEventListener("scroll", playIntroSound);
+    window.addEventListener("mousedown", playIntroSound);
+
+    // Direct autoplay attempt
+    audio.play().then(() => {
+      played = true;
+      cleanupListeners();
+    }).catch((e) => {
+      console.warn("Direct BGM autoplay blocked, waiting for interaction...");
     });
 
     return () => {
+      cleanupListeners();
       if (audioRef.current) {
         audioRef.current.pause();
         audioRef.current = null;
@@ -123,13 +153,12 @@ function MainLayout() {
     };
   }, []);
 
-  const playBGM = () => {
-    if (audioRef.current) {
-      audioRef.current.play().catch((e) => {
-        console.warn("BGM play failed:", e);
-      });
+  // Pause audio when intro is dismissed
+  useEffect(() => {
+    if (!showIntro && audioRef.current) {
+      audioRef.current.pause();
     }
-  };
+  }, [showIntro]);
 
   return (
     <>
@@ -138,7 +167,7 @@ function MainLayout() {
       <div className="bg-blob bg-blob-2" />
       <AnimatePresence>
         {showIntro && (
-          <IntroAnimation onPlayBGM={playBGM} onDone={() => setShowIntro(false)} />
+          <IntroAnimation onDone={() => setShowIntro(false)} />
         )}
       </AnimatePresence>
       <div id="app-content">
