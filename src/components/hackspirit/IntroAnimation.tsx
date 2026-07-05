@@ -3,50 +3,24 @@ import { useEffect, useState, useRef } from "react";
 
 export function IntroAnimation({ onDone }: { onDone: () => void }) {
   const [typed, setTyped] = useState("");
+  const [started, setStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const full = "CODE. CREATE. ELEVATE.";
 
-  useEffect(() => {
-    // Instantiate and preload the audio file immediately on mount
+  const handleStart = () => {
+    // Instantiate and play immediately in synchronous gesture block
     const audio = new Audio("/intro_sound.mp3");
     audio.volume = 0.85;
-    audio.loop = false; // play only once during the intro animation
+    audio.loop = false;
     audioRef.current = audio;
-    audio.load();
-
-    let played = false;
-    const playIntroSound = () => {
-      if (played) return;
-      audio.play().then(() => {
-        played = true;
-        cleanupListeners();
-      }).catch((e) => {
-        console.warn("Autoplay blocked by browser. Waiting for interaction...", e);
-      });
-    };
-
-    const cleanupListeners = () => {
-      window.removeEventListener("mousemove", playIntroSound);
-      window.removeEventListener("keydown", playIntroSound);
-      window.removeEventListener("touchstart", playIntroSound);
-      window.removeEventListener("scroll", playIntroSound);
-      window.removeEventListener("mousedown", playIntroSound);
-    };
-
-    // Listen for any micro-interaction to start playback
-    window.addEventListener("mousemove", playIntroSound);
-    window.addEventListener("keydown", playIntroSound);
-    window.addEventListener("touchstart", playIntroSound);
-    window.addEventListener("scroll", playIntroSound);
-    window.addEventListener("mousedown", playIntroSound);
-
-    // Direct autoplay attempt
-    audio.play().then(() => {
-      played = true;
-      cleanupListeners();
-    }).catch((e) => {
-      console.warn("Direct autoplay blocked, waiting for micro-interaction...");
+    audio.play().catch((e) => {
+      console.warn("Audio play failed on gesture:", e);
     });
+    setStarted(true);
+  };
+
+  useEffect(() => {
+    if (!started) return;
 
     // Start typing after 1.2s when the eyes are fully open
     const startTyping = setTimeout(() => {
@@ -63,7 +37,6 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
     const exit = setTimeout(onDone, 4400);
 
     return () => {
-      cleanupListeners();
       clearTimeout(startTyping);
       clearTimeout(exit);
       if (audioRef.current) {
@@ -71,7 +44,54 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
         audioRef.current = null;
       }
     };
-  }, [onDone]);
+  }, [started, onDone]);
+
+  if (!started) {
+    return (
+      <div
+        onClick={handleStart}
+        className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black overflow-hidden select-none cursor-pointer"
+      >
+        {/* Background Star Particles */}
+        {Array.from({ length: 24 }).map((_, i) => (
+          <span
+            key={i}
+            className="absolute w-[2px] h-[2px] rounded-full bg-cyan/30 animate-pulse"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              animationDelay: `${Math.random() * 2}s`,
+            }}
+          />
+        ))}
+
+        {/* Closed Eyes SVG (static) */}
+        <div className="relative flex items-center justify-center w-full max-w-[400px] h-[150px] opacity-25">
+          <svg
+            viewBox="0 0 400 120"
+            className="w-[260px] sm:w-[360px] h-auto z-10 pointer-events-none drop-shadow-[0_0_8px_rgba(6,182,212,0.3)]"
+          >
+            <g>
+              {/* Closed Left Eye */}
+              <line x1="60" y1="57" x2="175" y2="57" stroke="#06b6d4" strokeWidth="2.5" />
+              {/* Closed Right Eye */}
+              <line x1="225" y1="57" x2="340" y2="57" stroke="#06b6d4" strokeWidth="2.5" />
+            </g>
+          </svg>
+        </div>
+
+        {/* Pulsing Start Prompt */}
+        <motion.div
+          initial={{ opacity: 0.4 }}
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          className="font-display text-cyan tracking-[0.4em] text-xs sm:text-sm mt-8 border border-cyan/30 px-6 py-3 rounded bg-cyan/5 filter drop-shadow-[0_0_8px_rgba(6,182,212,0.3)]"
+        >
+          CLICK ANYWHERE TO START
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <motion.div
