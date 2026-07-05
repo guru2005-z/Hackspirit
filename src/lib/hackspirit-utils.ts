@@ -34,8 +34,8 @@ export function buildRegistrationMessage(formData: FormData, totalFee: number): 
   return lines.join("\n");
 }
 
-export function buildReceiptMessage(teamName: string, fee: number): string {
-  return `📎 HACKSPIRIT Payment Screenshot\nTeam: ${teamName}\nAmount: ₹${fee}\nPlease verify and issue entry pass.`;
+export function buildReceiptMessage(teamName: string, fee: number, transactionId: string): string {
+  return `📎 HACKSPIRIT Payment Screenshot\nTeam: ${teamName}\nAmount: ₹${fee}\nTransaction ID: ${transactionId}\nPlease verify and issue entry pass.`;
 }
 
 export function exportRegistrationsCSV(regs: Registration[]) {
@@ -45,6 +45,7 @@ export function exportRegistrationsCSV(regs: Registration[]) {
     "Team Name",
     "Team Size",
     "Total Fee",
+    "Transaction ID",
     "Member No",
     "Full Name",
     "Roll Number",
@@ -65,6 +66,7 @@ export function exportRegistrationsCSV(regs: Registration[]) {
         r.teamName,
         String(r.teamSize),
         String(r.totalFee),
+        r.transactionId || "",
         String(i + 1),
         m.name,
         m.roll,

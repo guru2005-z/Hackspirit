@@ -25,6 +25,7 @@ export type Registration = {
   totalFee: number;
   members: Member[];
   paymentScreenshotBase64: string;
+  transactionId: string;
   status: "pending" | "verified";
 };
 

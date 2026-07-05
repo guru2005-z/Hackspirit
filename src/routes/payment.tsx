@@ -27,6 +27,7 @@ export default function PaymentPage() {
   const [step, setStep] = useState(0);
   const [qrGenerated, setQrGenerated] = useState(false);
   const [screenshot, setScreenshot] = useState<{ file: File; preview: string } | null>(null);
+  const [transactionId, setTransactionId] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -73,29 +74,33 @@ export default function PaymentPage() {
 
   const finish = async () => {
     if (!screenshot || submitting) return;
+    if (!transactionId.trim()) {
+      return toast.error("Please enter your Transaction ID / UTR number.");
+    }
     setSubmitting(true);
     const t = toast.loading("Uploading screenshot to server…");
     try {
       // 1. Upload screenshot to cloud storage
       const ext = (screenshot.file.name.split(".").pop() || "png").toLowerCase();
-      const safeTeam = formData.teamName.replace(/[^a-zA-Z0-9]+/g, "_").slice(0, 30);
+      const safeTeam = formData.teamName.replace(/[^a-z0-9]/gi, "_").toLowerCase();
       const path = `screenshots/${Date.now()}_${safeTeam}.${ext}`;
       const publicUrl = await uploadToBucket(screenshot.file, path);
 
-      // 2. Insert registration record
+      // 2. Save registration data
       const reg = await createRegistration({
         teamName: formData.teamName,
         teamSize: formData.teamSize,
         totalFee: calculatedFee,
-        members: formData.members.slice(0, formData.teamSize),
+        members: formData.members,
         screenshotUrl: publicUrl,
+        transactionId: transactionId.trim(),
       });
       setCurrentRegistration(reg);
       toast.dismiss(t);
-      toast.success("Registration saved! Sharing screenshot to host…");
+      toast.success("Registration saved! Sharing details to host…");
 
       // 3. Send screenshot to host via WhatsApp — try Web Share API with file first
-      const message = buildReceiptMessage(formData.teamName, calculatedFee);
+      const message = buildReceiptMessage(formData.teamName, calculatedFee, transactionId.trim());
       const shareFile = new File([screenshot.file], `HACKSPIRIT_${safeTeam}_payment.${ext}`, {
         type: screenshot.file.type,
       });
@@ -270,6 +275,21 @@ export default function PaymentPage() {
               📁 Choose Screenshot from Device
             </button>
           )}
+
+          <div className="space-y-2 text-left">
+            <label htmlFor="transaction-id" className="block text-sm font-medium text-muted">
+              Transaction ID / UTR Number <span className="text-red">*</span>
+            </label>
+            <input
+              id="transaction-id"
+              type="text"
+              required
+              placeholder="Enter 12-digit UTR or Transaction Ref ID"
+              value={transactionId}
+              onChange={(e) => setTransactionId(e.target.value)}
+              className="w-full bg-surface border border-violet/30 focus:border-violet rounded-lg px-4 py-3 text-white font-sans text-sm focus:outline-none focus:ring-1 focus:ring-violet transition"
+            />
+          </div>
 
           <div className="glass p-4 text-sm text-muted space-y-1">
             <p>

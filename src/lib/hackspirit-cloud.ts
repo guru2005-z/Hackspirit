@@ -15,7 +15,8 @@ function rowToReg(r: Database["public"]["Tables"]["registrations"]["Row"]): Regi
     totalFee: r.total_fee,
     members: r.members as Member[],
     paymentScreenshotBase64: r.payment_screenshot_url || "",
-    status: r.status,
+    transactionId: r.transaction_id || "",
+    status: r.status as "pending" | "verified",
   };
 }
 
@@ -35,6 +36,7 @@ export async function createRegistration(input: {
   totalFee: number;
   members: Member[];
   screenshotUrl: string;
+  transactionId: string;
 }): Promise<Registration> {
   const { data, error } = await supabase
     .from("registrations")
@@ -44,6 +46,7 @@ export async function createRegistration(input: {
       total_fee: input.totalFee,
       members: input.members as unknown as Json,
       payment_screenshot_url: input.screenshotUrl,
+      transaction_id: input.transactionId,
       status: "pending",
     })
     .select()

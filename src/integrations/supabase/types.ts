@@ -39,6 +39,7 @@ export type Database = {
           team_name: string;
           team_size: number;
           total_fee: number;
+          transaction_id: string | null;
         };
         Insert: {
           created_at?: string;
@@ -49,6 +50,7 @@ export type Database = {
           team_name: string;
           team_size: number;
           total_fee: number;
+          transaction_id?: string | null;
         };
         Update: {
           created_at?: string;
@@ -59,6 +61,7 @@ export type Database = {
           team_name?: string;
           team_size?: number;
           total_fee?: number;
+          transaction_id?: string | null;
         };
         Relationships: [];
       };

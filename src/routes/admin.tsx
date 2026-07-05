@@ -289,18 +289,26 @@ export default function AdminPage() {
                                 </tbody>
                               </table>
                             </div>
-                            <div>
-                              <div className="text-xs text-muted mb-1">Payment Screenshot</div>
-                              {r.paymentScreenshotBase64 ? (
-                                <img
-                                  src={r.paymentScreenshotBase64}
-                                  alt="receipt"
-                                  className="max-h-40 rounded cursor-pointer hover:scale-105 transition"
-                                  onClick={() => setPreviewImg(r.paymentScreenshotBase64)}
-                                />
-                              ) : (
-                                <p className="text-xs text-muted">None</p>
-                              )}
+                            <div className="flex flex-col gap-3">
+                              <div>
+                                <div className="text-xs text-muted mb-1">Transaction ID / Reference</div>
+                                <code className="bg-surface px-2 py-1 rounded font-mono text-sm border border-white/10 select-all text-cyan">
+                                  {r.transactionId || "—"}
+                                </code>
+                              </div>
+                              <div>
+                                <div className="text-xs text-muted mb-1">Payment Screenshot</div>
+                                {r.paymentScreenshotBase64 ? (
+                                  <img
+                                    src={r.paymentScreenshotBase64}
+                                    alt="receipt"
+                                    className="max-h-40 rounded cursor-pointer hover:scale-105 transition"
+                                    onClick={() => setPreviewImg(r.paymentScreenshotBase64)}
+                                  />
+                                ) : (
+                                  <p className="text-xs text-muted">None</p>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </td>
