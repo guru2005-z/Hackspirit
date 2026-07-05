@@ -95,6 +95,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
 function MainLayout() {
   const [showIntro, setShowIntro] = useState(false);
+  const bgmRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (!sessionStorage.getItem("hackspirit_intro_seen")) {
@@ -102,6 +103,59 @@ function MainLayout() {
       sessionStorage.setItem("hackspirit_intro_seen", "true");
     }
   }, []);
+
+  useEffect(() => {
+    // Only initialize and play BGM (reg_sound.mp3) once the intro is NOT showing
+    if (showIntro) return;
+
+    const audio = new Audio("/reg_sound.mp3");
+    audio.volume = 0.5;
+    audio.loop = true;
+    bgmRef.current = audio;
+    audio.load();
+
+    let played = false;
+    const playBGM = () => {
+      if (played) return;
+      audio.play().then(() => {
+        played = true;
+        cleanupListeners();
+      }).catch((e) => {
+        console.warn("BGM autoplay blocked:", e);
+      });
+    };
+
+    const cleanupListeners = () => {
+      window.removeEventListener("mousemove", playBGM);
+      window.removeEventListener("keydown", playBGM);
+      window.removeEventListener("touchstart", playBGM);
+      window.removeEventListener("scroll", playBGM);
+      window.removeEventListener("mousedown", playBGM);
+    };
+
+    // Micro-interaction listeners to unlock audio as early as possible
+    window.addEventListener("mousemove", playBGM);
+    window.addEventListener("keydown", playBGM);
+    window.addEventListener("touchstart", playBGM);
+    window.addEventListener("scroll", playBGM);
+    window.addEventListener("mousedown", playBGM);
+
+    // Attempt direct autoplay
+    audio.play().then(() => {
+      played = true;
+      cleanupListeners();
+    }).catch((e) => {
+      console.warn("Direct BGM autoplay blocked, waiting for interaction...");
+    });
+
+    return () => {
+      cleanupListeners();
+      if (bgmRef.current) {
+        bgmRef.current.pause();
+        bgmRef.current = null;
+      }
+    };
+  }, [showIntro]);
 
   return (
     <>
