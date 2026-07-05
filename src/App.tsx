@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode, useEffect, useState } from "react";
+import React, { Component, ErrorInfo, ReactNode, useEffect, useState, useRef } from "react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AnimatePresence } from "framer-motion";
@@ -95,12 +95,62 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
 function MainLayout() {
   const [showIntro, setShowIntro] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     if (!sessionStorage.getItem("hackspirit_intro_seen")) {
       setShowIntro(true);
       sessionStorage.setItem("hackspirit_intro_seen", "true");
     }
+
+    // Set up global background music loop
+    const audio = new Audio("/intro_sound.mp3");
+    audio.volume = 0.6;
+    audio.loop = true;
+    audioRef.current = audio;
+    audio.load();
+
+    let played = false;
+    const playBGM = () => {
+      if (played) return;
+      audio.play().then(() => {
+        played = true;
+        cleanupListeners();
+      }).catch((e) => {
+        console.warn("BGM autoplay blocked:", e);
+      });
+    };
+
+    const cleanupListeners = () => {
+      window.removeEventListener("mousemove", playBGM);
+      window.removeEventListener("keydown", playBGM);
+      window.removeEventListener("touchstart", playBGM);
+      window.removeEventListener("scroll", playBGM);
+      window.removeEventListener("mousedown", playBGM);
+    };
+
+    // Micro-interaction triggers to bypass strict browser autoplay limits
+    window.addEventListener("mousemove", playBGM);
+    window.addEventListener("keydown", playBGM);
+    window.addEventListener("touchstart", playBGM);
+    window.addEventListener("scroll", playBGM);
+    window.addEventListener("mousedown", playBGM);
+
+    // Direct autoplay attempt
+    audio.play().then(() => {
+      played = true;
+      cleanupListeners();
+    }).catch((e) => {
+      console.warn("Direct BGM autoplay blocked, waiting for interaction...");
+    });
+
+    return () => {
+      cleanupListeners();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
   }, []);
 
   return (

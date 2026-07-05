@@ -3,50 +3,9 @@ import { useEffect, useState, useRef } from "react";
 
 export function IntroAnimation({ onDone }: { onDone: () => void }) {
   const [typed, setTyped] = useState("");
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const full = "CODE. CREATE. ELEVATE.";
 
   useEffect(() => {
-    // Instantiate and preload the audio file immediately on mount
-    const audio = new Audio("/intro_sound.mp3");
-    audio.volume = 0.85;
-    audioRef.current = audio;
-    audio.load();
-
-    let played = false;
-    const playOnInteraction = () => {
-      if (played) return;
-      audio.play().then(() => {
-        played = true;
-        cleanupListeners();
-      }).catch((e) => {
-        console.warn("Interaction play blocked:", e);
-      });
-    };
-
-    const cleanupListeners = () => {
-      window.removeEventListener("mousemove", playOnInteraction);
-      window.removeEventListener("keydown", playOnInteraction);
-      window.removeEventListener("touchstart", playOnInteraction);
-      window.removeEventListener("scroll", playOnInteraction);
-      window.removeEventListener("mousedown", playOnInteraction);
-    };
-
-    // Add micro-interaction listeners to trigger play on first user activity
-    window.addEventListener("mousemove", playOnInteraction);
-    window.addEventListener("keydown", playOnInteraction);
-    window.addEventListener("touchstart", playOnInteraction);
-    window.addEventListener("scroll", playOnInteraction);
-    window.addEventListener("mousedown", playOnInteraction);
-
-    // Attempt direct autoplay
-    audio.play().then(() => {
-      played = true;
-      cleanupListeners();
-    }).catch((e) => {
-      console.warn("Direct autoplay blocked, waiting for micro-interaction...");
-    });
-
     // Start typing after 1.2s when the eyes are fully open
     const startTyping = setTimeout(() => {
       let i = 0;
@@ -62,13 +21,8 @@ export function IntroAnimation({ onDone }: { onDone: () => void }) {
     const exit = setTimeout(onDone, 4400);
 
     return () => {
-      cleanupListeners();
       clearTimeout(startTyping);
       clearTimeout(exit);
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
     };
   }, [onDone]);
 
