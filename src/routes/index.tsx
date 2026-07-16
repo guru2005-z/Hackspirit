@@ -442,7 +442,7 @@ export default function LandingPage() {
             ) : (
               <div>
                 <p className="text-muted flex items-center justify-center gap-2">
-                  <Lock size={16} /> Locked — unlocks July 16, 2026 at 9:30 AM IST
+                  <Lock size={16} /> Locked — unlocks July 23, 2026 at 9:30 AM IST
                 </p>
                 {pdfUrl && adminSession && (
                   <p className="text-xs text-success mt-2">
