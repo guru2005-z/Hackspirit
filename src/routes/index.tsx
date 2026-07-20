@@ -45,8 +45,380 @@ const CONTACTS = [
   {
     name: "N. Upali",
     role: "Chair, IEEE Student Branch",
+    phone: "6305349156",
+    email: "upalinijamaala@gmail.com",
+  },
+  {
+    name: "K Guravaiah",
+    role: "Vice Chair, IEEE Student Branch",
+    phone: "9491501919",
+    email: "kattaguravaiah00@gmail.com",
+  },
+  {
+    name: "Kanumuru Rithika",
+    role: "Secretary, IEEE Student Branch",
+    phone: "7708731095",
+    email: "rithikareddyk2005@gmail.com",
   },
 ];
+
+function PrizePoolHighlightCard() {
+  const [isHovered, setIsHovered] = useState(false);
+
+  const prizes = [
+    {
+      place: "1st Place",
+      amount: "₹5,000",
+      label: "5K Cash Prize",
+      perk: "Winner Trophy & IEEE Winner Certificates",
+      badge: "🥇 Winner",
+      color: "border-amber-400/50 bg-amber-500/10 text-amber-300",
+      glow: "shadow-[0_0_25px_rgba(245,158,11,0.35)]",
+    },
+    {
+      place: "2nd Place",
+      amount: "₹3,000",
+      label: "3K Cash Prize",
+      perk: "Runner-up Trophy & IEEE Certificates",
+      badge: "🥈 Runner-up",
+      color: "border-slate-300/50 bg-slate-400/10 text-slate-200",
+      glow: "shadow-[0_0_25px_rgba(203,213,225,0.25)]",
+    },
+    {
+      place: "3rd Place",
+      amount: "₹2,000",
+      label: "2K Cash Prize",
+      perk: "Excellence Trophy & IEEE Certificates",
+      badge: "🥉 3rd Place",
+      color: "border-amber-600/50 bg-amber-700/10 text-amber-200",
+      glow: "shadow-[0_0_25px_rgba(217,119,6,0.25)]",
+    },
+    {
+      place: "Best Performer",
+      amount: "Voucher",
+      label: "Microsoft Voucher",
+      perk: "Official Microsoft Certification Voucher & Award",
+      badge: "🎓 Microsoft Voucher",
+      color: "border-cyan-400/50 bg-cyan-500/10 text-cyan-300",
+      glow: "shadow-[0_0_25px_rgba(6,182,212,0.35)]",
+    },
+  ];
+
+  return (
+    <motion.div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={() => setIsHovered((prev) => !prev)}
+      className="sm:col-span-2 md:col-span-3 cursor-pointer"
+      whileHover={{ scale: 1.01 }}
+      transition={{ duration: 0.3 }}
+    >
+      <TiltWrapper
+        className={`glass p-6 sm:p-8 rounded-2xl border-2 transition-all duration-500 relative overflow-hidden ${
+          isHovered
+            ? "border-amber-400/80 shadow-[0_0_45px_rgba(245,158,11,0.4)] bg-gradient-to-br from-amber-500/15 via-surface/95 to-violet-950/40"
+            : "border-amber-500/40 hover:border-amber-400/70 shadow-[0_0_25px_rgba(245,158,11,0.2)]"
+        }`}
+        maxTilt={5}
+      >
+        <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-3xl shrink-0 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+              🎁
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <h3 className="font-display text-2xl sm:text-3xl text-white font-bold">
+                  ₹10K Prize Pool & Certifications
+                </h3>
+                <span className="animate-pulse px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider bg-amber-500/20 text-amber-300 border border-amber-400/40 uppercase">
+                  Hover to Expand
+                </span>
+              </div>
+              <p className="text-muted text-xs sm:text-sm mt-1">
+                {isHovered
+                  ? "Official Prize & Award Distribution Breakdown:"
+                  : "Move cursor over this card to view 1st (5K), 2nd (3K), 3rd (2K) cash awards & Microsoft Certification Voucher!"}
+              </p>
+            </div>
+          </div>
+
+          <div
+            className={`flex items-center gap-1.5 text-xs px-3.5 py-1.5 rounded-lg border transition-all duration-300 self-start sm:self-center ${
+              isHovered
+                ? "bg-amber-400 text-black font-bold border-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.5)]"
+                : "text-amber-300 bg-amber-500/10 border-amber-500/30 animate-pulse"
+            }`}
+          >
+            <Sparkles size={14} />
+            <span>{isHovered ? "Prize Details Active" : "Hover for Prize Breakdown"}</span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
+          {prizes.map((p, i) => (
+            <motion.div
+              key={i}
+              initial={false}
+              animate={{
+                scale: isHovered ? 1.03 : 1,
+                y: isHovered ? -3 : 0,
+              }}
+              transition={{ duration: 0.3, delay: i * 0.05 }}
+              className={`p-4 rounded-xl border backdrop-blur-md transition-all duration-300 ${p.color} ${
+                isHovered ? p.glow : ""
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-semibold px-2 py-0.5 rounded bg-black/50 border border-white/10">
+                  {p.badge}
+                </span>
+                <span className="text-xl">{p.icon}</span>
+              </div>
+              <div className="font-display font-black text-2xl text-white tracking-wide">
+                {p.amount}
+              </div>
+              <div className="text-xs font-bold text-amber-300 mt-0.5">{p.label}</div>
+              <p className="text-[11px] text-muted mt-2 leading-tight border-t border-white/10 pt-2">
+                {p.perk}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      </TiltWrapper>
+    </motion.div>
+  );
+}
+
+const TRACKS_DATA = [
+  {
+    id: "aiml",
+    icon: "🤖",
+    title: "AI / Machine Learning Track",
+    tagline: "Intelligent Systems, Generative AI & Autonomous Agents",
+    summary:
+      "Architect intelligent systems using machine learning models, computer vision pipelines, natural language processing, and autonomous AI agents to solve complex real-world challenges.",
+    technologies: [
+      {
+        name: "Python",
+        role: "Core AI Language",
+        desc: "Dataset preprocessing, ML algorithms, scientific computing & model deployment pipelines.",
+      },
+      {
+        name: "TensorFlow & PyTorch",
+        role: "Deep Learning Frameworks",
+        desc: "Neural network architectures, image recognition models & predictive analytics.",
+      },
+      {
+        name: "LLMs & GenAI",
+        role: "Foundation Models",
+        desc: "Integrating GPT, Claude, Gemini & Llama for intelligent search, coding assistants & AI agents.",
+      },
+      {
+        name: "OpenCV",
+        role: "Computer Vision",
+        desc: "Real-time video processing, facial detection, spatial computing & object tracking.",
+      },
+    ],
+    ideas: [
+      "AI Medical Diagnostic & X-Ray Assistant",
+      "Automated Code Security & Vulnerability Auditor",
+      "Real-time Sign Language Video Translator",
+      "Smart Agriculture Crop Health Detector",
+    ],
+    accentColor: "border-cyan/70 shadow-[0_0_35px_rgba(6,182,212,0.3)]",
+    badgeBg: "bg-cyan/20 text-cyan border-cyan/40",
+  },
+  {
+    id: "fullstack",
+    icon: "🌐",
+    title: "Full Stack Web & Mobile Track",
+    tagline: "End-to-End Responsive Apps, Scalable APIs & Cloud Data",
+    summary:
+      "Engineer end-to-end web and mobile applications with intuitive user interfaces, high-performance backend microservices, and secure real-time databases.",
+    technologies: [
+      {
+        name: "React & Next.js",
+        role: "Modern Frontend",
+        desc: "Component-driven UI, server-side rendering, dynamic animations & lightning-fast UX.",
+      },
+      {
+        name: "Node.js & Express",
+        role: "Backend Runtime",
+        desc: "Asynchronous microservices, RESTful APIs, WebSocket servers & secure routing.",
+      },
+      {
+        name: "Databases (Supabase / Postgres / Mongo)",
+        role: "Data Layer",
+        desc: "Relational & NoSQL cloud databases with real-time subscriptions & row-level security.",
+      },
+      {
+        name: "APIs & Webhooks",
+        role: "Cloud Integration",
+        desc: "Connecting client applications, cloud microservices & third-party SaaS APIs.",
+      },
+    ],
+    ideas: [
+      "Decentralized Campus Event & Hackathon Portal",
+      "Real-Time Emergency Dispatcher App",
+      "Collaborative Code Workspace with Video Call",
+      "Smart Personal Finance & Expense Analytics App",
+    ],
+    accentColor: "border-violet/70 shadow-[0_0_35px_rgba(124,58,237,0.3)]",
+    badgeBg: "bg-violet/20 text-violet border-violet/40",
+  },
+];
+
+function TrackCardItem({ track }: { track: (typeof TRACKS_DATA)[0] }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [activeTech, setActiveTech] = useState<string | null>(null);
+
+  return (
+    <motion.div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setActiveTech(null);
+      }}
+      className="h-full"
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3 }}
+    >
+      <TiltWrapper
+        className={`glass p-6 sm:p-8 rounded-2xl border-2 transition-all duration-500 h-full flex flex-col justify-between relative overflow-hidden ${
+          isHovered
+            ? track.accentColor + " bg-gradient-to-br from-surface/95 via-surface/90 to-violet-950/40"
+            : "border-white/10 hover:border-cyan/40"
+        }`}
+        maxTilt={5}
+      >
+        <div>
+          <div className="flex items-start justify-between gap-4 mb-4">
+            <div className="flex items-center gap-3">
+              <div className="text-4xl sm:text-5xl p-3 rounded-2xl bg-surface/80 border border-white/10 shadow-inner shrink-0">
+                {track.icon}
+              </div>
+              <div>
+                <h3 className="font-display text-xl sm:text-2xl font-bold text-white">
+                  {track.title}
+                </h3>
+                <span className="text-xs text-cyan font-medium tracking-wide">
+                  {track.tagline}
+                </span>
+              </div>
+            </div>
+            <span
+              className={`text-[11px] px-2.5 py-1 rounded-full border ${track.badgeBg} font-mono shrink-0 hidden sm:inline-block`}
+            >
+              Interactive Track
+            </span>
+          </div>
+
+          <p className="text-muted text-sm leading-relaxed mb-6">
+            {track.summary}
+          </p>
+
+          <div className="mb-6">
+            <div className="text-xs font-semibold text-white/90 uppercase tracking-wider mb-2.5 flex items-center gap-2">
+              <Code2 size={14} className="text-cyan" />
+              <span>Technology Stack Specs</span>
+              <span className="text-[10px] text-muted font-normal">(Hover/Tap tech for info)</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {track.technologies.map((tech) => {
+                const isSelected = activeTech === tech.name;
+                return (
+                  <button
+                    key={tech.name}
+                    onMouseEnter={() => setActiveTech(tech.name)}
+                    onClick={() => setActiveTech(activeTech === tech.name ? null : tech.name)}
+                    className={`text-xs px-3 py-1.5 rounded-lg border transition-all duration-200 font-medium flex items-center gap-1.5 ${
+                      isSelected || (isHovered && !activeTech)
+                        ? "bg-cyan/20 text-cyan border-cyan/50 shadow-[0_0_12px_rgba(6,182,212,0.3)] scale-105"
+                        : "bg-surface/60 text-muted border-white/10 hover:border-cyan/40 hover:text-white"
+                    }`}
+                  >
+                    <span>{tech.name}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="space-y-3 my-4">
+            <AnimatePresence mode="wait">
+              {activeTech ? (
+                <motion.div
+                  key={activeTech}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="p-4 rounded-xl bg-cyan/10 border border-cyan/40 text-xs text-white shadow-[0_0_20px_rgba(6,182,212,0.2)]"
+                >
+                  {(() => {
+                    const tech = track.technologies.find((t) => t.name === activeTech);
+                    if (!tech) return null;
+                    return (
+                      <div>
+                        <div className="font-bold text-cyan flex items-center justify-between text-sm mb-1">
+                          <span>{tech.name}</span>
+                          <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-cyan/20 border border-cyan/30 text-cyan-300">
+                            {tech.role}
+                          </span>
+                        </div>
+                        <p className="text-muted text-xs leading-relaxed">{tech.desc}</p>
+                      </div>
+                    );
+                  })()}
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="grid grid-cols-1 sm:grid-cols-2 gap-2"
+                >
+                  {track.technologies.map((tech) => (
+                    <div
+                      key={tech.name}
+                      onMouseEnter={() => setActiveTech(tech.name)}
+                      className="p-3 rounded-xl bg-surface/50 border border-white/5 hover:border-cyan/40 transition-all text-xs cursor-pointer group"
+                    >
+                      <div className="font-bold text-white group-hover:text-cyan transition-colors flex items-center justify-between">
+                        <span>{tech.name}</span>
+                        <Zap size={12} className="text-cyan opacity-0 group-hover:opacity-100 transition-opacity" />
+                      </div>
+                      <div className="text-[11px] text-muted truncate mt-0.5">{tech.role}</div>
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-white/10">
+            <div className="text-xs font-semibold text-amber-300 uppercase tracking-wider mb-3 flex items-center gap-2">
+              <Sparkles size={14} className="text-amber-400" />
+              <span>Project Ideas You Can Build</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              {track.ideas.map((idea, idx) => (
+                <div
+                  key={idx}
+                  className="text-xs p-2.5 rounded-xl bg-violet-950/25 border border-violet-500/20 text-muted flex items-start gap-2 hover:border-violet-400/50 hover:text-white transition-all"
+                >
+                  <CheckCircle2 size={14} className="text-cyan shrink-0 mt-0.5" />
+                  <span className="leading-snug">{idea}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </TiltWrapper>
+    </motion.div>
+  );
+}
 
 export default function LandingPage() {
   const navigate = useNavigate();
