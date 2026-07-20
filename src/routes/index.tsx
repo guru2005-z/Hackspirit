@@ -1,7 +1,24 @@
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
-import { Phone, X, Plus, Lock, Mail } from "lucide-react";
+import {
+  Phone,
+  X,
+  Plus,
+  Lock,
+  Mail,
+  Sparkles,
+  Code2,
+  Trophy,
+  Award,
+  Gift,
+  Zap,
+  CheckCircle2,
+  Star,
+  Layers,
+  Bot,
+  Globe,
+} from "lucide-react";
 import toast from "react-hot-toast";
 import { CountdownTimer } from "@/components/hackspirit/CountdownTimer";
 import { PasswordModal } from "@/components/hackspirit/PasswordModal";
@@ -28,15 +45,6 @@ const CONTACTS = [
   {
     name: "N. Upali",
     role: "Chair, IEEE Student Branch",
-    phone: "6305349156",
-    email: "upalinijamaala@gmail.com",
-  },
-  { name: "K Guravaiah", role: "Vice Chair, IEEE Student Branch", phone: "9491501919", email: "" },
-  {
-    name: "Kanumuru Rithika",
-    role: "Secretary, IEEE Student Branch",
-    phone: "7708731095",
-    email: "rithikareddyk2005@gmail.com",
   },
 ];
 
@@ -299,34 +307,45 @@ export default function LandingPage() {
         <motion.h2 {...fadeUp} className="font-display text-3xl sm:text-4xl text-center">
           <span className="gradient-text">Event Highlights</span>
         </motion.h2>
-        <div className="grid sm:grid-cols-2 gap-4 mt-10">
+        <p className="text-center text-muted text-xs sm:text-sm mt-2 max-w-xl mx-auto">
+          Explore what makes HACKSPIRIT 2K26 extraordinary. Move cursor over the Prize Pool card below for full award distribution!
+        </p>
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-10">
           {[
-            { icon: "⏱", title: "6-Hour Sprint", desc: "Intense, focused build time" },
+            {
+              icon: "⏱",
+              title: "6-Hour Sprint",
+              desc: "Intense, focused build time with active mentor check-ins",
+            },
             {
               icon: "🎓",
               title: "Open to All Tech Branches",
-              desc: "CSE, IT, ECE, AI&DS and more",
+              desc: "CSE, IT, ECE, AI&DS and all engineering streams",
             },
             {
               icon: "🏆",
               title: "Expert Evaluations",
-              desc: "Industry mentors judge every project",
+              desc: "Industry experts & senior faculty judge every project",
             },
-            { icon: "🎁", title: "₹10K Prize Money", desc: "For top performers and participants" },
           ].map((h, i) => (
             <motion.div
               key={i}
               {...fadeUp}
               transition={{ duration: 0.5, delay: i * 0.1 }}
-              whileHover={{ y: -8, boxShadow: "0 0 32px rgba(124,58,237,0.4)" }}
+              whileHover={{ y: -6, boxShadow: "0 0 32px rgba(124,58,237,0.4)" }}
             >
-              <TiltWrapper className="glass p-6 rounded-xl">
-                <div className="text-4xl mb-3">{h.icon}</div>
-                <h3 className="font-display text-xl mb-1">{h.title}</h3>
-                <p className="text-muted text-sm">{h.desc}</p>
+              <TiltWrapper className="glass p-6 rounded-2xl h-full flex flex-col justify-between border border-white/10 hover:border-violet/40 transition-colors">
+                <div>
+                  <div className="text-4xl mb-3">{h.icon}</div>
+                  <h3 className="font-display text-xl mb-1.5 text-white">{h.title}</h3>
+                  <p className="text-muted text-sm leading-relaxed">{h.desc}</p>
+                </div>
               </TiltWrapper>
             </motion.div>
           ))}
+
+          {/* Special Interactive Highlighted Prize Pool Card */}
+          <PrizePoolHighlightCard />
         </div>
       </section>
 
@@ -338,38 +357,13 @@ export default function LandingPage() {
         >
           What Can You Build?
         </motion.h2>
+        <p className="text-center text-muted text-xs sm:text-sm mt-2 max-w-2xl mx-auto">
+          Unleash your innovation across specialized tracks. Move your cursor over any track card or technology tag to inspect framework details and real-world project ideas.
+        </p>
+
         <div className="grid md:grid-cols-2 gap-6 mt-10">
-          {[
-            {
-              icon: "🤖",
-              title: "AI / ML",
-              desc: "Computer vision, NLP, generative AI, smart agents.",
-              tags: ["Python", "TensorFlow", "LLMs", "OpenCV"],
-            },
-            {
-              icon: "🌐",
-              title: "Full Stack",
-              desc: "End-to-end web & mobile apps that solve real problems.",
-              tags: ["React", "Node", "Database", "APIs"],
-            },
-          ].map((t, i) => (
-            <motion.div key={i} {...fadeUp} transition={{ duration: 0.5, delay: i * 0.1 }}>
-              <TiltWrapper className="glass p-6 border-l-4 border-cyan rounded-xl" maxTilt={8}>
-                <div className="text-5xl mb-3">{t.icon}</div>
-                <h3 className="font-display text-2xl mb-2">{t.title}</h3>
-                <p className="text-muted mb-4">{t.desc}</p>
-                <div className="flex flex-wrap gap-2">
-                  {t.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="text-xs px-3 py-1 rounded-full bg-violet/20 text-violet border border-violet/30"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </TiltWrapper>
-            </motion.div>
+          {TRACKS_DATA.map((track) => (
+            <TrackCardItem key={track.id} track={track} />
           ))}
         </div>
       </section>
