@@ -18,6 +18,13 @@ import {
   Layers,
   Bot,
   Globe,
+  Users,
+  BookOpen,
+  ShieldCheck,
+  Search,
+  UserPlus,
+  ExternalLink,
+  MessageSquare,
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { CountdownTimer } from "@/components/hackspirit/CountdownTimer";
@@ -420,6 +427,374 @@ function TrackCardItem({ track }: { track: (typeof TRACKS_DATA)[0] }) {
   );
 }
 
+function StudentVerseSection() {
+  const [activeTab, setActiveTab] = useState<"teammates" | "vault" | "badge" | "faqs">("teammates");
+  const [badgeName, setBadgeName] = useState("Your Name");
+  const [badgeRoll, setBadgeRoll] = useState("23KB1A0000");
+  const [badgeBranch, setBadgeBranch] = useState("CSE / AI&DS");
+  const [searchSkill, setSearchSkill] = useState("");
+
+  const SAMPLE_TEAMMATES = [
+    {
+      name: "Rahul Varma",
+      branch: "CSE - 3rd Year",
+      skills: ["AI / ML", "Python", "OpenCV"],
+      lookingFor: "Full Stack Developer",
+      contact: "https://wa.me/919491501919?text=Hi%20Rahul,%20saw%20your%20profile%20on%20StudentVerse!",
+    },
+    {
+      name: "Ananya Reddy",
+      branch: "AI&DS - 2nd Year",
+      skills: ["React", "Java", "UI/UX"],
+      lookingFor: "AI / GenAI Engineer",
+      contact: "https://wa.me/919491501919?text=Hi%20Ananya,%20saw%20your%20profile%20on%20StudentVerse!",
+    },
+    {
+      name: "K. Guravaiah",
+      branch: "CSE - IEEE SB",
+      skills: ["Full Stack", "Node.js", "Supabase"],
+      lookingFor: "Open to team up",
+      contact: "https://wa.me/919491501919?text=Hi,%20saw%20your%20StudentVerse%20profile!",
+    },
+    {
+      name: "Sowmya K.",
+      branch: "ECE - 3rd Year",
+      skills: ["Python", "FastAPI", "TensorFlow"],
+      lookingFor: "Frontend Developer",
+      contact: "https://wa.me/919491501919?text=Hi%20Sowmya,%20saw%20your%20profile%20on%20StudentVerse!",
+    },
+  ];
+
+  const RESOURCE_KITS = [
+    {
+      title: "React + Vite Frontend Starter",
+      tech: "React 18 + Tailwind CSS + Lucide",
+      desc: "Ultra-fast frontend template ready with responsive Cyberpunk Glassmorphism UI components.",
+      icon: "⚛️",
+      link: "https://github.com/vitejs/vite",
+    },
+    {
+      title: "Python AI & FastAPI Model Boilerplate",
+      tech: "Python 3.11 + FastAPI + PyTorch",
+      desc: "Pre-configured REST API template with GenAI prompt wrappers, RAG helper scripts & CORS setup.",
+      icon: "🐍",
+      link: "https://fastapi.tiangolo.com/",
+    },
+    {
+      title: "Java Spring Boot REST Starter",
+      tech: "Java 21 + Spring Boot 3 + H2/Postgres",
+      desc: "Production-ready enterprise Java backend template with REST controller samples & JPA ORM.",
+      icon: "☕",
+      link: "https://start.spring.io/",
+    },
+    {
+      title: "OpenCV Computer Vision Starter",
+      tech: "Python + OpenCV + YOLOv8",
+      desc: "Webcam video processing script with real-time object detection and facial recognition.",
+      icon: "👁️",
+      link: "https://opencv.org/",
+    },
+  ];
+
+  const FAQS = [
+    {
+      q: "Can students from non-CSE branches participate?",
+      a: "Yes! HACKSPIRIT 2K26 is 100% open to students from ALL tech branches including CSE, IT, ECE, AI&DS, EEE, CIVIL, MECH, and allied engineering streams.",
+    },
+    {
+      q: "What is the team size limit?",
+      a: "Teams can have between 1 to 4 members. You can also form cross-branch teams with friends from different departments!",
+    },
+    {
+      q: "Are hardware or pre-built models allowed?",
+      a: "All code and prototypes must be built during the 6-hour hackathon sprint. Open-source libraries, APIs, and pre-trained models (e.g. OpenAI, Hugging Face, OpenCV) are fully permitted.",
+    },
+    {
+      q: "Will certificates & prize money be awarded on the same day?",
+      a: "Yes! Winning teams will receive their cash prizes, trophies, IEEE Certificates, and Microsoft Certification Vouchers immediately during the closing ceremony.",
+    },
+  ];
+
+  const filteredTeammates = SAMPLE_TEAMMATES.filter(
+    (t) =>
+      !searchSkill ||
+      t.skills.some((s) => s.toLowerCase().includes(searchSkill.toLowerCase())) ||
+      t.branch.toLowerCase().includes(searchSkill.toLowerCase())
+  );
+
+  return (
+    <section id="studentverse" className="py-20 px-4 max-w-6xl mx-auto relative">
+      {/* Background ambient glow */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-tr from-cyan/20 to-violet/20 rounded-full blur-[100px] pointer-events-none" />
+
+      <motion.div {...fadeUp} className="text-center mb-10">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan/10 border border-cyan/30 text-cyan text-xs font-semibold uppercase tracking-wider mb-3">
+          <Sparkles size={14} />
+          <span>Student Community Platform</span>
+        </div>
+        <h2 className="font-display text-3xl sm:text-5xl font-black gradient-text">
+          StudentVerse Hub
+        </h2>
+        <p className="text-muted text-xs sm:text-sm max-w-2xl mx-auto mt-2">
+          Your ultimate hackathon companion. Connect with fellow student innovators, download free starter kits, generate your digital IEEE pass, and get live support!
+        </p>
+      </motion.div>
+
+      {/* StudentVerse Tab Navigation */}
+      <div className="flex justify-center gap-2 flex-wrap mb-8">
+        {[
+          { id: "teammates", label: "🤝 Teammate Finder", icon: Users },
+          { id: "vault", label: "📦 Starter Kits & Vault", icon: BookOpen },
+          { id: "badge", label: "🏷️ Student Pass Generator", icon: ShieldCheck },
+          { id: "faqs", label: "❓ Student FAQs & Support", icon: MessageSquare },
+        ].map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id as any)}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold transition-all duration-300 ${
+                isActive
+                  ? "bg-gradient-to-r from-cyan to-violet text-black shadow-[0_0_20px_rgba(6,182,212,0.4)] scale-105"
+                  : "glass text-muted hover:text-white hover:border-cyan/40"
+              }`}
+            >
+              <Icon size={14} />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Tab Contents */}
+      <AnimatePresence mode="wait">
+        {activeTab === "teammates" && (
+          <motion.div
+            key="teammates"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            className="space-y-4"
+          >
+            <div className="glass p-4 sm:p-6 rounded-2xl border border-white/10">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                <div>
+                  <h3 className="font-display text-xl font-bold text-white flex items-center gap-2">
+                    <Users className="text-cyan" size={20} />
+                    <span>Find Teammates & Peer Skill Matching</span>
+                  </h3>
+                  <p className="text-muted text-xs mt-1">
+                    Looking for a developer, AI designer, or partner? Connect directly with registered students.
+                  </p>
+                </div>
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3 top-2.5 text-muted" size={14} />
+                  <input
+                    type="text"
+                    placeholder="Search by skill (e.g. AI, React)..."
+                    value={searchSkill}
+                    onChange={(e) => setSearchSkill(e.target.value)}
+                    className="w-full bg-surface/80 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-muted focus:border-cyan outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {filteredTeammates.map((person, idx) => (
+                  <TiltWrapper key={idx} className="glass p-4 rounded-xl border border-white/10 hover:border-cyan/40 transition-all">
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h4 className="font-bold text-white text-sm">{person.name}</h4>
+                        <span className="text-[11px] text-cyan font-mono">{person.branch}</span>
+                      </div>
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-violet/20 text-violet border border-violet/30 font-medium">
+                        Looking for: {person.lookingFor}
+                      </span>
+                    </div>
+
+                    <div className="flex flex-wrap gap-1.5 mt-3">
+                      {person.skills.map((skill) => (
+                        <span key={skill} className="text-[10px] px-2 py-0.5 rounded-full bg-surface/80 text-muted border border-white/10">
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+
+                    <a
+                      href={person.contact}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 w-full btn-outline py-1.5 text-xs flex items-center justify-center gap-1.5 text-cyan hover:bg-cyan/20 border-cyan/30"
+                    >
+                      <UserPlus size={12} />
+                      <span>Connect on WhatsApp</span>
+                    </a>
+                  </TiltWrapper>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {activeTab === "vault" && (
+          <motion.div
+            key="vault"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+          >
+            {RESOURCE_KITS.map((kit, idx) => (
+              <TiltWrapper key={idx} className="glass p-6 rounded-2xl border border-white/10 hover:border-cyan/50 transition-all flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-3xl p-2.5 rounded-xl bg-surface border border-white/10">{kit.icon}</span>
+                    <div>
+                      <h4 className="font-display font-bold text-white text-lg leading-tight">{kit.title}</h4>
+                      <span className="text-xs text-amber-300 font-mono">{kit.tech}</span>
+                    </div>
+                  </div>
+                  <p className="text-muted text-xs leading-relaxed">{kit.desc}</p>
+                </div>
+
+                <a
+                  href={kit.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 btn-primary py-2 text-xs flex items-center justify-center gap-2"
+                >
+                  <ExternalLink size={14} />
+                  <span>Access Starter Resource</span>
+                </a>
+              </TiltWrapper>
+            ))}
+          </motion.div>
+        )}
+
+        {activeTab === "badge" && (
+          <motion.div
+            key="badge"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center"
+          >
+            {/* Input Controls */}
+            <div className="glass p-6 rounded-2xl border border-white/10 space-y-4 text-left">
+              <h3 className="font-display text-xl font-bold text-white flex items-center gap-2">
+                <ShieldCheck className="text-cyan" size={20} />
+                <span>Customize Your Digital Student Badge</span>
+              </h3>
+              <p className="text-muted text-xs">
+                Type your details below to generate your official IEEE HACKSPIRIT 2K26 Participant Pass preview!
+              </p>
+
+              <div>
+                <label className="text-xs text-muted mb-1 block">Full Name</label>
+                <input
+                  type="text"
+                  value={badgeName}
+                  onChange={(e) => setBadgeName(e.target.value)}
+                  className="w-full bg-surface/80 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-cyan outline-none"
+                  placeholder="Enter your name"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs text-muted mb-1 block">Roll Number</label>
+                <input
+                  type="text"
+                  value={badgeRoll}
+                  onChange={(e) => setBadgeRoll(e.target.value)}
+                  className="w-full bg-surface/80 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-cyan outline-none"
+                  placeholder="Enter your roll number"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs text-muted mb-1 block">Branch & Section</label>
+                <input
+                  type="text"
+                  value={badgeBranch}
+                  onChange={(e) => setBadgeBranch(e.target.value)}
+                  className="w-full bg-surface/80 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-cyan outline-none"
+                  placeholder="e.g. CSE - A"
+                />
+              </div>
+            </div>
+
+            {/* Badge Live Preview */}
+            <TiltWrapper className="glass p-6 rounded-2xl border-2 border-cyan/60 shadow-[0_0_35px_rgba(6,182,212,0.25)] relative overflow-hidden bg-gradient-to-br from-violet-950/40 via-surface/95 to-cyan-950/30 text-left">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-full bg-cyan/20 border border-cyan/40 flex items-center justify-center font-bold text-cyan text-xs">
+                    IEEE
+                  </div>
+                  <div>
+                    <div className="font-display font-bold text-white text-sm">HACKSPIRIT 2K26</div>
+                    <div className="text-[10px] text-cyan">IEEE Student Branch Pass</div>
+                  </div>
+                </div>
+                <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[10px] font-mono font-bold">
+                  VERIFIED PASS
+                </span>
+              </div>
+
+              <div className="space-y-3 py-2">
+                <div>
+                  <div className="text-[10px] text-muted uppercase tracking-wider">Participant Name</div>
+                  <div className="font-display font-black text-xl text-white gradient-text">
+                    {badgeName || "Your Name"}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div>
+                    <div className="text-[10px] text-muted uppercase">Roll Number</div>
+                    <div className="font-mono text-cyan">{badgeRoll || "23KB1A0000"}</div>
+                  </div>
+                  <div>
+                    <div className="text-[10px] text-muted uppercase">Branch</div>
+                    <div className="font-mono text-white">{badgeBranch || "CSE / AI&DS"}</div>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[10px] text-muted font-mono">
+                  <span>DATE: JULY 23, 2026</span>
+                  <span>VENUE: NBKRIST CAMPUS</span>
+                </div>
+              </div>
+            </TiltWrapper>
+          </motion.div>
+        )}
+
+        {activeTab === "faqs" && (
+          <motion.div
+            key="faqs"
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -15 }}
+            className="space-y-3 max-w-3xl mx-auto"
+          >
+            {FAQS.map((faq, idx) => (
+              <div key={idx} className="glass p-4 rounded-xl border border-white/10 text-left">
+                <h4 className="font-bold text-white text-sm flex items-center gap-2 mb-1.5">
+                  <span className="text-cyan">Q:</span>
+                  <span>{faq.q}</span>
+                </h4>
+                <p className="text-muted text-xs leading-relaxed pl-5 border-l-2 border-cyan/40">
+                  {faq.a}
+                </p>
+              </div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </section>
+  );
+}
+
 export default function LandingPage() {
   const navigate = useNavigate();
   const { setAdminAuth } = useApp();
@@ -616,6 +991,12 @@ export default function LandingPage() {
             <button className="btn-outline" onClick={scrollToSchedule}>
               View Schedule
             </button>
+            <button
+              className="btn-outline border-cyan/40 text-cyan hover:bg-cyan/20"
+              onClick={() => document.getElementById("studentverse")?.scrollIntoView({ behavior: "smooth" })}
+            >
+              🌌 StudentVerse Hub
+            </button>
           </motion.div>
           <button className="btn-outline mt-4" onClick={() => setContactOpen((o) => !o)}>
             {contactOpen ? "Hide Contact" : "Contact Us"}
@@ -739,6 +1120,9 @@ export default function LandingPage() {
           ))}
         </div>
       </section>
+
+      {/* STUDENTVERSE COMMUNITY HUB */}
+      <StudentVerseSection />
 
       {/* SCHEDULE */}
       <section id="schedule" className="py-20 px-4 max-w-4xl mx-auto">
