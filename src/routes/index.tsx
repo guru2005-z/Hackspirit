@@ -798,7 +798,7 @@ export default function LandingPage() {
         <p className="text-center text-muted text-xs sm:text-sm mt-2 max-w-xl mx-auto">
           Explore what makes HACKSPIRIT 2K26 extraordinary. Move your cursor over the cards to reveal special features!
         </p>
-        <div className="grid sm:grid-cols-2 gap-4 mt-10">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-10">
           {[
             {
               icon: "⏱",
@@ -815,75 +815,112 @@ export default function LandingPage() {
               title: "Expert Evaluations",
               desc: "Industry experts & senior faculty judge every project",
             },
-            {
-              icon: "🎁",
-              title: "₹10K Prize Money",
-              desc: "For top performers and outstanding participants. Hover to view breakdown!",
-              isPrize: true,
-            },
-          ].map((h, i) => {
-            const isPrizeCard = "isPrize" in h;
-            return (
-              <motion.div
-                key={i}
-                {...fadeUp}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                whileHover={{ y: -6, boxShadow: "0 0 32px rgba(124,58,237,0.4)" }}
-                onMouseEnter={() => isPrizeCard && setHoveredPrize(true)}
-                onMouseLeave={() => isPrizeCard && setHoveredPrize(false)}
-              >
-                <TiltWrapper className={`glass p-6 rounded-2xl min-h-[160px] flex flex-col justify-center border transition-all duration-300 relative overflow-hidden ${isPrizeCard && hoveredPrize ? "border-amber-400/80 shadow-[0_0_40px_rgba(245,158,11,0.3)] bg-gradient-to-br from-amber-500/10 via-surface/95 to-violet-950/40" : "border-white/10 hover:border-violet/40"}`} maxTilt={6}>
-                  <AnimatePresence mode="wait">
-                    {isPrizeCard && hoveredPrize ? (
-                      <motion.div
-                        key="prize-details"
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.2 }}
-                        className="w-full text-left"
-                      >
-                        <h4 className="font-display text-sm text-amber-400 tracking-wider uppercase mb-3 flex items-center gap-1.5 border-b border-white/10 pb-1.5">
-                          🏆 Prize Pool Breakdown
-                        </h4>
-                        <div className="grid grid-cols-2 gap-3 text-xs">
-                          <div className="flex items-center gap-2 bg-white/5 p-2 rounded-lg border border-white/10">
-                            <span className="text-base">🥇</span>
-                            <span>1st: <strong className="text-sm sm:text-base text-amber-300 font-extrabold shadow-amber-500/20">₹5,000</strong></span>
-                          </div>
-                          <div className="flex items-center gap-2 bg-white/5 p-2 rounded-lg border border-white/10">
-                            <span className="text-base">🥈</span>
-                            <span>2nd: <strong className="text-sm sm:text-base text-amber-300 font-extrabold shadow-amber-500/20">₹3,000</strong></span>
-                          </div>
-                          <div className="flex items-center gap-2 bg-white/5 p-2 rounded-lg border border-white/10">
-                            <span className="text-base">🥉</span>
-                            <span>3rd: <strong className="text-sm sm:text-base text-amber-300 font-extrabold shadow-amber-500/20">₹2,000</strong></span>
-                          </div>
-                          <div className="flex items-center gap-2 col-span-2 mt-1 bg-cyan-950/40 border border-cyan-500/30 rounded-xl p-2 text-[11px] text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
-                            <span className="text-sm">🌟</span>
-                            <span className="font-semibold">Microsoft Certification Voucher for Best Performer</span>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="standard-details"
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        <div className="text-4xl mb-3">{h.icon}</div>
-                        <h3 className="font-display text-xl mb-1.5 text-white">{h.title}</h3>
-                        <p className="text-muted text-sm leading-relaxed">{h.desc}</p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </TiltWrapper>
-              </motion.div>
-            );
-          })}
+          ].map((h, i) => (
+            <motion.div
+              key={i}
+              {...fadeUp}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              whileHover={{ y: -6, boxShadow: "0 0 32px rgba(124,58,237,0.4)" }}
+            >
+              <TiltWrapper className="glass p-6 rounded-2xl h-full flex flex-col justify-between border border-white/10 hover:border-violet/40 transition-colors" maxTilt={6}>
+                <div>
+                  <div className="text-4xl mb-3">{h.icon}</div>
+                  <h3 className="font-display text-xl mb-1.5 text-white">{h.title}</h3>
+                  <p className="text-muted text-sm leading-relaxed">{h.desc}</p>
+                </div>
+              </TiltWrapper>
+            </motion.div>
+          ))}
         </div>
+
+        {/* Separate prominent Prize Pool Highlight Card */}
+        <motion.div
+          {...fadeUp}
+          transition={{ duration: 0.5, delay: 0.35 }}
+          className="mt-6 cursor-pointer"
+          onMouseEnter={() => setHoveredPrize(true)}
+          onMouseLeave={() => setHoveredPrize(false)}
+        >
+          <TiltWrapper className={`glass p-6 sm:p-8 rounded-2xl border-2 transition-all duration-500 relative overflow-hidden ${hoveredPrize ? "border-amber-400/80 shadow-[0_0_45px_rgba(245,158,11,0.35)] bg-gradient-to-br from-amber-500/10 via-surface/95 to-violet-950/40" : "border-amber-500/30 hover:border-amber-400/60 shadow-[0_0_20px_rgba(245,158,11,0.15)]"}`} maxTilt={4}>
+            <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+            <AnimatePresence mode="wait">
+              {hoveredPrize ? (
+                <motion.div
+                  key="prize-details"
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -15 }}
+                  transition={{ duration: 0.25 }}
+                  className="w-full text-left"
+                >
+                  <div className="flex items-center gap-2 mb-4 border-b border-white/10 pb-2">
+                    <span className="text-2xl">🏆</span>
+                    <h4 className="font-display text-lg text-amber-400 font-bold uppercase tracking-wider">
+                      Prize Pool & Award Distribution
+                    </h4>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="flex flex-col justify-between bg-white/5 p-4 rounded-xl border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.02)]">
+                      <div>
+                        <span className="text-2xl">🥇</span>
+                        <div className="text-[10px] uppercase text-muted tracking-wider font-mono mt-1">1st Place Prize</div>
+                      </div>
+                      <div className="text-xl sm:text-2xl text-amber-300 font-black mt-2">₹5,000</div>
+                    </div>
+                    <div className="flex flex-col justify-between bg-white/5 p-4 rounded-xl border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.02)]">
+                      <div>
+                        <span className="text-2xl">🥈</span>
+                        <div className="text-[10px] uppercase text-muted tracking-wider font-mono mt-1">2nd Place Prize</div>
+                      </div>
+                      <div className="text-xl sm:text-2xl text-amber-300 font-black mt-2">₹3,000</div>
+                    </div>
+                    <div className="flex flex-col justify-between bg-white/5 p-4 rounded-xl border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.02)]">
+                      <div>
+                        <span className="text-2xl">🥉</span>
+                        <div className="text-[10px] uppercase text-muted tracking-wider font-mono mt-1">3rd Place Prize</div>
+                      </div>
+                      <div className="text-xl sm:text-2xl text-amber-300 font-black mt-2">₹2,000</div>
+                    </div>
+                    <div className="flex flex-col justify-between bg-cyan-950/40 p-4 rounded-xl border border-cyan-500/30 shadow-[0_0_20px_rgba(6,182,212,0.15)]">
+                      <div>
+                        <span className="text-2xl">🌟</span>
+                        <div className="text-[10px] uppercase text-cyan-300 tracking-wider font-mono mt-1">Best Performer Award</div>
+                      </div>
+                      <div className="text-xs text-white font-bold leading-snug mt-2">Microsoft Certification Voucher</div>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="prize-summary"
+                  initial={{ opacity: 0, y: -15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 15 }}
+                  transition={{ duration: 0.25 }}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                >
+                  <div className="flex items-center gap-4 text-left">
+                    <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-3xl shrink-0 shadow-[0_0_20px_rgba(245,158,11,0.2)]">
+                      🎁
+                    </div>
+                    <div>
+                      <h3 className="font-display text-xl sm:text-2xl text-white font-bold">
+                        ₹10K Total Prize Pool & Vouchers
+                      </h3>
+                      <p className="text-muted text-xs sm:text-sm mt-0.5 leading-relaxed">
+                        Cash awards for the winning teams & official Microsoft Certification Vouchers for top performers.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs px-3.5 py-1.5 rounded-lg border text-amber-300 bg-amber-500/10 border-amber-500/30 animate-pulse self-start sm:self-center shrink-0">
+                    <Sparkles size={14} />
+                    <span>Hover to View Breakdown</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </TiltWrapper>
+        </motion.div>
       </section>
 
       {/* TRACKS */}
