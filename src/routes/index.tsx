@@ -302,21 +302,21 @@ function StudentVerseSection() {
   const [activeTab, setActiveTab] = useState<"teammates" | "vault" | "faqs">("teammates");
   const COORDINATOR_CONTACTS = [
     {
-      member: "Member 1",
       name: "K. Guravaiah",
       phone: "9491501919",
+      role: "Vicechair",
       contact: "https://wa.me/919491501919?text=Hi%20K.%20Guravaiah,%20I%20have%20a%20doubt%20regarding%20HACKSPIRIT%202K26.",
     },
     {
-      member: "Member 2",
       name: "N. Upali",
       phone: "6305349156",
+      role: "Chair",
       contact: "https://wa.me/916305349156?text=Hi%20N.%20Upali,%20I%20have%20a%20doubt%20regarding%20HACKSPIRIT%202K26.",
     },
     {
-      member: "Member 3",
       name: "K. Rithika",
       phone: "7708731095",
+      role: "Secretary",
       contact: "https://wa.me/917708731095?text=Hi%20K.%20Rithika,%20I%20have%20a%20doubt%20regarding%20HACKSPIRIT%202K26.",
     },
   ];
@@ -442,7 +442,7 @@ function StudentVerseSection() {
                     <div>
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-[10px] px-2 py-0.5 rounded bg-cyan/20 text-cyan border border-cyan/30 font-semibold font-mono">
-                          {person.member}
+                          {person.role}
                         </span>
                         <span className="text-xs text-muted flex items-center gap-1 font-mono">
                           <Phone size={12} className="text-cyan" />
@@ -843,25 +843,25 @@ export default function LandingPage() {
                         transition={{ duration: 0.2 }}
                         className="w-full text-left"
                       >
-                        <h4 className="font-display text-sm text-cyan tracking-wider uppercase mb-3 flex items-center gap-1.5 border-b border-white/10 pb-1.5">
+                        <h4 className="font-display text-sm text-amber-400 tracking-wider uppercase mb-3 flex items-center gap-1.5 border-b border-white/10 pb-1.5">
                           🏆 Prize Pool Breakdown
                         </h4>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-sm">🥇</span>
-                            <span>1st Place: <strong className="text-amber-300">₹5,000</strong></span>
+                        <div className="grid grid-cols-2 gap-3 text-xs">
+                          <div className="flex items-center gap-2 bg-white/5 p-2 rounded-lg border border-white/10">
+                            <span className="text-base">🥇</span>
+                            <span>1st: <strong className="text-sm sm:text-base text-amber-300 font-extrabold shadow-amber-500/20">₹5,000</strong></span>
                           </div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-sm">🥈</span>
-                            <span>2nd Place: <strong className="text-amber-300">₹3,000</strong></span>
+                          <div className="flex items-center gap-2 bg-white/5 p-2 rounded-lg border border-white/10">
+                            <span className="text-base">🥈</span>
+                            <span>2nd: <strong className="text-sm sm:text-base text-amber-300 font-extrabold shadow-amber-500/20">₹3,000</strong></span>
                           </div>
-                          <div className="flex items-center gap-1.5">
-                            <span className="text-sm">🥉</span>
-                            <span>3rd Place: <strong className="text-amber-300">₹2,000</strong></span>
+                          <div className="flex items-center gap-2 bg-white/5 p-2 rounded-lg border border-white/10">
+                            <span className="text-base">🥉</span>
+                            <span>3rd: <strong className="text-sm sm:text-base text-amber-300 font-extrabold shadow-amber-500/20">₹2,000</strong></span>
                           </div>
-                          <div className="flex items-center gap-1.5 col-span-2 mt-1 bg-violet/20 border border-violet/30 rounded px-2 py-0.5 text-[10px] text-cyan-300">
-                            <span className="text-xs">🌟</span>
-                            <span>Microsoft Certification Voucher for Best Performer</span>
+                          <div className="flex items-center gap-2 col-span-2 mt-1 bg-cyan-950/40 border border-cyan-500/30 rounded-xl p-2 text-[11px] text-cyan-300 shadow-[0_0_15px_rgba(6,182,212,0.2)]">
+                            <span className="text-sm">🌟</span>
+                            <span className="font-semibold">Microsoft Certification Voucher for Best Performer</span>
                           </div>
                         </div>
                       </motion.div>
