@@ -71,6 +71,16 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
           <div className="max-w-md text-center">
             <h1 className="text-xl font-semibold">This page didn't load</h1>
             <p className="mt-2 text-sm text-muted">Something went wrong.</p>
+            {this.state.error && (
+              <pre className="mt-4 p-3 bg-red-950/40 border border-red-500/30 text-red-400 text-xs rounded-xl text-left overflow-auto max-h-48 font-mono select-all">
+                <strong>Error:</strong> {this.state.error.toString()}
+                {this.state.error.stack && (
+                  <div className="mt-2 opacity-80 text-[10px] leading-relaxed">
+                    {this.state.error.stack.split("\n").slice(0, 5).join("\n")}
+                  </div>
+                )}
+              </pre>
+            )}
             <div className="mt-6 flex gap-2 justify-center">
               <button
                 onClick={() => {
