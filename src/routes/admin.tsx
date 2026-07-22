@@ -1,6 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useMemo, useState, Fragment } from "react";
-import { ArrowLeft, Download, Trash2, ChevronDown, ChevronUp, X, RefreshCw } from "lucide-react";
+import { ArrowLeft, Download, ChevronDown, ChevronUp, X, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 import { useApp } from "@/lib/AppContext";
 import { exportRegistrationsCSV } from "@/lib/hackspirit-utils";
@@ -8,7 +8,6 @@ import type { Registration } from "@/lib/AppContext";
 import {
   fetchAllRegistrations,
   toggleRegistrationStatus,
-  deleteAllRegistrations,
   fetchSettings,
   toggleLiveRegistration,
 } from "@/lib/hackspirit-cloud";
@@ -28,8 +27,6 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [page, setPage] = useState(0);
-  const [confirmDel, setConfirmDel] = useState(false);
-  const [confirmText, setConfirmText] = useState("");
   const [previewImg, setPreviewImg] = useState<string | null>(null);
   const [githubOpen, setGithubOpen] = useState(false);
   const [regOpen, setRegOpen] = useState(true);
@@ -81,18 +78,6 @@ export default function AdminPage() {
     }
   };
 
-  const clearAll = async () => {
-    if (confirmText !== "DELETE") return toast.error("Type DELETE to confirm");
-    try {
-      await deleteAllRegistrations();
-      setRegs([]);
-      setConfirmDel(false);
-      setConfirmText("");
-      toast.success("All registrations cleared");
-    } catch (error: unknown) {
-      toast.error(error instanceof Error ? error.message : "Delete failed");
-    }
-  };
 
   const logout = () => {
     sessionStorage.removeItem("hackspirit_admin_session");
@@ -179,13 +164,6 @@ export default function AdminPage() {
             <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.1.39-1.99 1.03-2.69a3.6 3.6 0 0 1 .1-2.64s.84-.27 2.75 1.02a9.58 9.58 0 0 1 5.1 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.64.7 1.03 1.6 1.03 2.69 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.74c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2Z" />
           </svg>
           Export to GitHub
-        </button>
-        <button
-          onClick={() => setConfirmDel(true)}
-          className="btn-outline !py-2 !border-red-500 !text-red-400"
-        >
-          <Trash2 size={14} />
-          Clear All Data
         </button>
       </div>
 
@@ -341,36 +319,6 @@ export default function AdminPage() {
         </div>
       )}
 
-      {confirmDel && (
-        <div className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4">
-          <div className="glass p-6 max-w-sm w-full">
-            <h3 className="font-display text-xl mb-2 text-red-400">⚠️ Clear All Data</h3>
-            <p className="text-sm text-muted mb-3">
-              Type <span className="text-red-400 font-bold">DELETE</span> to confirm.
-            </p>
-            <input
-              className="input-field"
-              value={confirmText}
-              onChange={(e) => setConfirmText(e.target.value)}
-              placeholder="DELETE"
-            />
-            <div className="flex gap-2 mt-4">
-              <button
-                onClick={() => {
-                  setConfirmDel(false);
-                  setConfirmText("");
-                }}
-                className="btn-outline flex-1"
-              >
-                Cancel
-              </button>
-              <button onClick={clearAll} className="btn-primary flex-1 !bg-red-500">
-                Delete All
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {previewImg && (
         <div
