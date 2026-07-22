@@ -91,7 +91,7 @@ export function exportRegistrationsCSV(regs: Registration[]) {
   URL.revokeObjectURL(url);
 }
 
-export const HOST_PASSWORD = "bgtpeak-2017";
+export const HOST_PASSWORD = "kgr@2005";
 export const ORGANIZER_PHONE = "919491501919";
 export const COUNTDOWN_TARGET = new Date("2026-07-30T09:30:00+05:30");
 
