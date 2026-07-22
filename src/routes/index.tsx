@@ -19,7 +19,6 @@ import {
   Globe,
   Users,
   BookOpen,
-  ShieldCheck,
   Search,
   UserPlus,
   ExternalLink,
@@ -409,10 +408,7 @@ function TrackCardItem({ track }: { track: (typeof TRACKS_DATA)[0] }) {
 }
 
 function StudentVerseSection() {
-  const [activeTab, setActiveTab] = useState<"teammates" | "vault" | "badge" | "faqs">("teammates");
-  const [badgeName, setBadgeName] = useState("Your Name");
-  const [badgeRoll, setBadgeRoll] = useState("23KB1A0000");
-  const [badgeBranch, setBadgeBranch] = useState("CSE / AI&DS");
+  const [activeTab, setActiveTab] = useState<"teammates" | "vault" | "faqs">("teammates");
   const COORDINATOR_CONTACTS = [
     {
       member: "Member 1",
@@ -498,7 +494,7 @@ function StudentVerseSection() {
           StudentVerse Hub
         </h2>
         <p className="text-muted text-xs sm:text-sm max-w-2xl mx-auto mt-2">
-          Your ultimate hackathon companion. Connect with fellow student innovators, download free starter kits, generate your digital IEEE pass, and get live support!
+          Your ultimate hackathon companion. Connect with fellow student innovators, download free starter kits, check FAQs, and get live support!
         </p>
       </motion.div>
 
@@ -507,7 +503,6 @@ function StudentVerseSection() {
         {[
           { id: "teammates", label: "📞 Contact Us / Support", icon: Phone },
           { id: "vault", label: "📦 Starter Kits & Vault", icon: BookOpen },
-          { id: "badge", label: "🏷️ Student Pass Generator", icon: ShieldCheck },
           { id: "faqs", label: "❓ Student FAQs & Support", icon: MessageSquare },
         ].map((tab) => {
           const Icon = tab.icon;
@@ -614,103 +609,6 @@ function StudentVerseSection() {
                 </a>
               </TiltWrapper>
             ))}
-          </motion.div>
-        )}
-
-        {activeTab === "badge" && (
-          <motion.div
-            key="badge"
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -15 }}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center"
-          >
-            {/* Input Controls */}
-            <div className="glass p-6 rounded-2xl border border-white/10 space-y-4 text-left">
-              <h3 className="font-display text-xl font-bold text-white flex items-center gap-2">
-                <ShieldCheck className="text-cyan" size={20} />
-                <span>Customize Your Digital Student Badge</span>
-              </h3>
-              <p className="text-muted text-xs">
-                Type your details below to generate your official IEEE HACKSPIRIT 2K26 Participant Pass preview!
-              </p>
-
-              <div>
-                <label className="text-xs text-muted mb-1 block">Full Name</label>
-                <input
-                  type="text"
-                  value={badgeName}
-                  onChange={(e) => setBadgeName(e.target.value)}
-                  className="w-full bg-surface/80 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-cyan outline-none"
-                  placeholder="Enter your name"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs text-muted mb-1 block">Roll Number</label>
-                <input
-                  type="text"
-                  value={badgeRoll}
-                  onChange={(e) => setBadgeRoll(e.target.value)}
-                  className="w-full bg-surface/80 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-cyan outline-none"
-                  placeholder="Enter your roll number"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs text-muted mb-1 block">Branch & Section</label>
-                <input
-                  type="text"
-                  value={badgeBranch}
-                  onChange={(e) => setBadgeBranch(e.target.value)}
-                  className="w-full bg-surface/80 border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:border-cyan outline-none"
-                  placeholder="e.g. CSE - A"
-                />
-              </div>
-            </div>
-
-            {/* Badge Live Preview */}
-            <TiltWrapper className="glass p-6 rounded-2xl border-2 border-cyan/60 shadow-[0_0_35px_rgba(6,182,212,0.25)] relative overflow-hidden bg-gradient-to-br from-violet-950/40 via-surface/95 to-cyan-950/30 text-left">
-              <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-cyan/20 border border-cyan/40 flex items-center justify-center font-bold text-cyan text-xs">
-                    IEEE
-                  </div>
-                  <div>
-                    <div className="font-display font-bold text-white text-sm">HACKSPIRIT 2K26</div>
-                    <div className="text-[10px] text-cyan">IEEE Student Branch Pass</div>
-                  </div>
-                </div>
-                <span className="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-400/30 text-[10px] font-mono font-bold">
-                  VERIFIED PASS
-                </span>
-              </div>
-
-              <div className="space-y-3 py-2">
-                <div>
-                  <div className="text-[10px] text-muted uppercase tracking-wider">Participant Name</div>
-                  <div className="font-display font-black text-xl text-white gradient-text">
-                    {badgeName || "Your Name"}
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div>
-                    <div className="text-[10px] text-muted uppercase">Roll Number</div>
-                    <div className="font-mono text-cyan">{badgeRoll || "23KB1A0000"}</div>
-                  </div>
-                  <div>
-                    <div className="text-[10px] text-muted uppercase">Branch</div>
-                    <div className="font-mono text-white">{badgeBranch || "CSE / AI&DS"}</div>
-                  </div>
-                </div>
-
-                <div className="pt-3 border-t border-white/10 flex items-center justify-between text-[10px] text-muted font-mono">
-                  <span>DATE: JULY 23, 2026</span>
-                  <span>VENUE: NBKRIST CAMPUS</span>
-                </div>
-              </div>
-            </TiltWrapper>
           </motion.div>
         )}
 
