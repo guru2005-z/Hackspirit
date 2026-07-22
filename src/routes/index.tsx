@@ -13,7 +13,6 @@ import {
   Award,
   Gift,
   Zap,
-  CheckCircle2,
   Star,
   Layers,
   Bot,
@@ -402,24 +401,6 @@ function TrackCardItem({ track }: { track: (typeof TRACKS_DATA)[0] }) {
                 </motion.div>
               )}
             </AnimatePresence>
-          </div>
-
-          <div className="mt-6 pt-4 border-t border-white/10">
-            <div className="text-xs font-semibold text-amber-300 uppercase tracking-wider mb-3 flex items-center gap-2">
-              <Sparkles size={14} className="text-amber-400" />
-              <span>Project Ideas You Can Build</span>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              {track.ideas.map((idea, idx) => (
-                <div
-                  key={idx}
-                  className="text-xs p-2.5 rounded-xl bg-violet-950/25 border border-violet-500/20 text-muted flex items-start gap-2 hover:border-violet-400/50 hover:text-white transition-all"
-                >
-                  <CheckCircle2 size={14} className="text-cyan shrink-0 mt-0.5" />
-                  <span className="leading-snug">{idea}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </TiltWrapper>
@@ -1111,7 +1092,7 @@ export default function LandingPage() {
           What Can You Build?
         </motion.h2>
         <p className="text-center text-muted text-xs sm:text-sm mt-2 max-w-2xl mx-auto">
-          Unleash your innovation across specialized tracks. Move your cursor over any track card or technology tag to inspect framework details and real-world project ideas.
+          Unleash your innovation across specialized tracks. Move your cursor over any track card or technology tag to inspect framework details.
         </p>
 
         <div className="grid md:grid-cols-2 gap-6 mt-10">
