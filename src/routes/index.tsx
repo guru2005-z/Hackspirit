@@ -67,136 +67,6 @@ const CONTACTS = [
   },
 ];
 
-function PrizePoolHighlightCard() {
-  const [isHovered, setIsHovered] = useState(false);
-
-  const prizes = [
-    {
-      place: "1st Place",
-      amount: "₹5,000",
-      label: "5K Cash Prize",
-      perk: "Winner Trophy & IEEE Winner Certificates",
-      badge: "🥇 Winner",
-      color: "border-amber-400/50 bg-amber-500/10 text-amber-300",
-      glow: "shadow-[0_0_25px_rgba(245,158,11,0.35)]",
-    },
-    {
-      place: "2nd Place",
-      amount: "₹3,000",
-      label: "3K Cash Prize",
-      perk: "Runner-up Trophy & IEEE Certificates",
-      badge: "🥈 Runner-up",
-      color: "border-slate-300/50 bg-slate-400/10 text-slate-200",
-      glow: "shadow-[0_0_25px_rgba(203,213,225,0.25)]",
-    },
-    {
-      place: "3rd Place",
-      amount: "₹2,000",
-      label: "2K Cash Prize",
-      perk: "Excellence Trophy & IEEE Certificates",
-      badge: "🥉 3rd Place",
-      color: "border-amber-600/50 bg-amber-700/10 text-amber-200",
-      glow: "shadow-[0_0_25px_rgba(217,119,6,0.25)]",
-    },
-    {
-      place: "Best Performer",
-      amount: "Voucher",
-      label: "Microsoft Voucher",
-      perk: "Official Microsoft Certification Voucher & Award",
-      badge: "🎓 Microsoft Voucher",
-      color: "border-cyan-400/50 bg-cyan-500/10 text-cyan-300",
-      glow: "shadow-[0_0_25px_rgba(6,182,212,0.35)]",
-    },
-  ];
-
-  return (
-    <motion.div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      onClick={() => setIsHovered((prev) => !prev)}
-      className="sm:col-span-2 md:col-span-3 cursor-pointer"
-      whileHover={{ scale: 1.01 }}
-      transition={{ duration: 0.3 }}
-    >
-      <TiltWrapper
-        className={`glass p-6 sm:p-8 rounded-2xl border-2 transition-all duration-500 relative overflow-hidden ${
-          isHovered
-            ? "border-amber-400/80 shadow-[0_0_45px_rgba(245,158,11,0.4)] bg-gradient-to-br from-amber-500/15 via-surface/95 to-violet-950/40"
-            : "border-amber-500/40 hover:border-amber-400/70 shadow-[0_0_25px_rgba(245,158,11,0.2)]"
-        }`}
-        maxTilt={5}
-      >
-        <div className="absolute -top-12 -right-12 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl pointer-events-none" />
-
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-3xl shrink-0 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-              🎁
-            </div>
-            <div>
-              <div className="flex items-center gap-2 flex-wrap">
-                <h3 className="font-display text-2xl sm:text-3xl text-white font-bold">
-                  ₹10K Prize Pool & Certifications
-                </h3>
-                <span className="animate-pulse px-2.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wider bg-amber-500/20 text-amber-300 border border-amber-400/40 uppercase">
-                  Hover to Expand
-                </span>
-              </div>
-              <p className="text-muted text-xs sm:text-sm mt-1">
-                {isHovered
-                  ? "Official Prize & Award Distribution Breakdown:"
-                  : "Move cursor over this card to view 1st (5K), 2nd (3K), 3rd (2K) cash awards & Microsoft Certification Voucher!"}
-              </p>
-            </div>
-          </div>
-
-          <div
-            className={`flex items-center gap-1.5 text-xs px-3.5 py-1.5 rounded-lg border transition-all duration-300 self-start sm:self-center ${
-              isHovered
-                ? "bg-amber-400 text-black font-bold border-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.5)]"
-                : "text-amber-300 bg-amber-500/10 border-amber-500/30 animate-pulse"
-            }`}
-          >
-            <Sparkles size={14} />
-            <span>{isHovered ? "Prize Details Active" : "Hover for Prize Breakdown"}</span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mt-4">
-          {prizes.map((p, i) => (
-            <motion.div
-              key={i}
-              initial={false}
-              animate={{
-                scale: isHovered ? 1.03 : 1,
-                y: isHovered ? -3 : 0,
-              }}
-              transition={{ duration: 0.3, delay: i * 0.05 }}
-              className={`p-4 rounded-xl border backdrop-blur-md transition-all duration-300 ${p.color} ${
-                isHovered ? p.glow : ""
-              }`}
-            >
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold px-2 py-0.5 rounded bg-black/50 border border-white/10">
-                  {p.badge}
-                </span>
-                <span className="text-xl">{p.icon}</span>
-              </div>
-              <div className="font-display font-black text-2xl text-white tracking-wide">
-                {p.amount}
-              </div>
-              <div className="text-xs font-bold text-amber-300 mt-0.5">{p.label}</div>
-              <p className="text-[11px] text-muted mt-2 leading-tight border-t border-white/10 pt-2">
-                {p.perk}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </TiltWrapper>
-    </motion.div>
-  );
-}
-
 const TRACKS_DATA = [
   {
     id: "aiml",
@@ -400,6 +270,27 @@ function TrackCardItem({ track }: { track: (typeof TRACKS_DATA)[0] }) {
                 </motion.div>
               )}
             </AnimatePresence>
+          </div>
+
+          <div className="overflow-hidden">
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ 
+                height: isHovered ? "auto" : 0, 
+                opacity: isHovered ? 1 : 0 
+              }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="border-t border-white/10 pt-3 mt-4 text-left"
+            >
+              <h4 className="text-cyan text-xs tracking-wider uppercase mb-2 font-display flex items-center gap-1.5">
+                💡 Recommended Projects to Build:
+              </h4>
+              <ul className="text-xs text-muted list-disc list-inside space-y-1 pl-1">
+                {track.ideas.map((idea, idx) => (
+                  <li key={idx} className="hover:text-white transition-colors duration-250">{idea}</li>
+                ))}
+              </ul>
+            </motion.div>
           </div>
         </div>
       </TiltWrapper>
@@ -664,6 +555,7 @@ export default function LandingPage() {
   const [galleryImgs, setGalleryImgs] = useState<(string | null)[]>([null, null, null]);
   const [uploading, setUploading] = useState(false);
   const [regOpen, setRegOpen] = useState(true);
+  const [hoveredPrize, setHoveredPrize] = useState(false);
   const pdfInputRef = useRef<HTMLInputElement>(null);
   const galleryRefs = [
     useRef<HTMLInputElement>(null),
@@ -904,9 +796,9 @@ export default function LandingPage() {
           <span className="gradient-text">Event Highlights</span>
         </motion.h2>
         <p className="text-center text-muted text-xs sm:text-sm mt-2 max-w-xl mx-auto">
-          Explore what makes HACKSPIRIT 2K26 extraordinary. Move cursor over the Prize Pool card below for full award distribution!
+          Explore what makes HACKSPIRIT 2K26 extraordinary. Move your cursor over the cards to reveal special features!
         </p>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 mt-10">
+        <div className="grid sm:grid-cols-2 gap-4 mt-10">
           {[
             {
               icon: "⏱",
@@ -923,25 +815,74 @@ export default function LandingPage() {
               title: "Expert Evaluations",
               desc: "Industry experts & senior faculty judge every project",
             },
-          ].map((h, i) => (
-            <motion.div
-              key={i}
-              {...fadeUp}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
-              whileHover={{ y: -6, boxShadow: "0 0 32px rgba(124,58,237,0.4)" }}
-            >
-              <TiltWrapper className="glass p-6 rounded-2xl h-full flex flex-col justify-between border border-white/10 hover:border-violet/40 transition-colors">
-                <div>
-                  <div className="text-4xl mb-3">{h.icon}</div>
-                  <h3 className="font-display text-xl mb-1.5 text-white">{h.title}</h3>
-                  <p className="text-muted text-sm leading-relaxed">{h.desc}</p>
-                </div>
-              </TiltWrapper>
-            </motion.div>
-          ))}
-
-          {/* Special Interactive Highlighted Prize Pool Card */}
-          <PrizePoolHighlightCard />
+            {
+              icon: "🎁",
+              title: "₹10K Prize Money",
+              desc: "For top performers and outstanding participants. Hover to view breakdown!",
+              isPrize: true,
+            },
+          ].map((h, i) => {
+            const isPrizeCard = "isPrize" in h;
+            return (
+              <motion.div
+                key={i}
+                {...fadeUp}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ y: -6, boxShadow: "0 0 32px rgba(124,58,237,0.4)" }}
+                onMouseEnter={() => isPrizeCard && setHoveredPrize(true)}
+                onMouseLeave={() => isPrizeCard && setHoveredPrize(false)}
+              >
+                <TiltWrapper className={`glass p-6 rounded-2xl min-h-[160px] flex flex-col justify-center border transition-all duration-300 relative overflow-hidden ${isPrizeCard && hoveredPrize ? "border-amber-400/80 shadow-[0_0_40px_rgba(245,158,11,0.3)] bg-gradient-to-br from-amber-500/10 via-surface/95 to-violet-950/40" : "border-white/10 hover:border-violet/40"}`} maxTilt={6}>
+                  <AnimatePresence mode="wait">
+                    {isPrizeCard && hoveredPrize ? (
+                      <motion.div
+                        key="prize-details"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="w-full text-left"
+                      >
+                        <h4 className="font-display text-sm text-cyan tracking-wider uppercase mb-3 flex items-center gap-1.5 border-b border-white/10 pb-1.5">
+                          🏆 Prize Pool Breakdown
+                        </h4>
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm">🥇</span>
+                            <span>1st Place: <strong className="text-amber-300">₹5,000</strong></span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm">🥈</span>
+                            <span>2nd Place: <strong className="text-amber-300">₹3,000</strong></span>
+                          </div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-sm">🥉</span>
+                            <span>3rd Place: <strong className="text-amber-300">₹2,000</strong></span>
+                          </div>
+                          <div className="flex items-center gap-1.5 col-span-2 mt-1 bg-violet/20 border border-violet/30 rounded px-2 py-0.5 text-[10px] text-cyan-300">
+                            <span className="text-xs">🌟</span>
+                            <span>Microsoft Certification Voucher for Best Performer</span>
+                          </div>
+                        </div>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="standard-details"
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <div className="text-4xl mb-3">{h.icon}</div>
+                        <h3 className="font-display text-xl mb-1.5 text-white">{h.title}</h3>
+                        <p className="text-muted text-sm leading-relaxed">{h.desc}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </TiltWrapper>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
@@ -953,8 +894,8 @@ export default function LandingPage() {
         >
           What Can You Build?
         </motion.h2>
-        <p className="text-center text-muted text-xs sm:text-sm mt-2 max-w-2xl mx-auto">
-          Unleash your innovation across specialized tracks. Move your cursor over any track card or technology tag to inspect framework details.
+        <p className="text-center text-muted text-xs sm:text-sm mt-2 max-w-3xl mx-auto">
+          Unleash your creativity and construct next-generation software. Select from our two specialized technical tracks: build intelligent algorithms in AI/ML, or engineer high-performance web and mobile applications in Full Stack. Hover over the cards to reveal project ideas!
         </p>
 
         <div className="grid md:grid-cols-2 gap-6 mt-10">
