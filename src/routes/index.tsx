@@ -363,7 +363,7 @@ function StudentVerseSection() {
     },
     {
       q: "Are hardware or pre-built models allowed?",
-      a: "All code and prototypes must be built during the 6-hour hackathon sprint. Open-source libraries, APIs, and pre-trained models (e.g. OpenAI, Hugging Face, OpenCV) are fully permitted.",
+      a: "All code and prototypes must be built during the 5-hour hackathon sprint. Open-source libraries, APIs, and pre-trained models (e.g. OpenAI, Hugging Face, OpenCV) are fully permitted.",
     },
     {
       q: "Will certificates & prize money be awarded on the same day?",
@@ -539,7 +539,7 @@ export default function LandingPage() {
     if (metaDesc) {
       metaDesc.setAttribute(
         "content",
-        "Register for HACKSPIRIT 2K26 — a 6-hour college hackathon by IEEE Student Branch, NBKRIST. Open to all tech branches."
+        "Register for HACKSPIRIT 2K26 — a 5-hour college hackathon by IEEE Student Branch, NBKRIST. Open to all tech branches."
       );
     }
   }, []);
@@ -702,7 +702,7 @@ export default function LandingPage() {
             transition={{ delay: 0.6 }}
             className="text-muted max-w-2xl mx-auto mt-6 text-sm sm:text-base"
           >
-            A 6-hour sprint where bold ideas become working prototypes. Build something brilliant
+            A 5-hour sprint where bold ideas become working prototypes. Build something brilliant
             with your team, get expert feedback, and walk away with ₹10K prize money & certificates.
           </motion.p>
           <motion.div
@@ -802,7 +802,7 @@ export default function LandingPage() {
           {[
             {
               icon: "⏱",
-              title: "6-Hour Sprint",
+              title: "5-Hour Sprint",
               desc: "Intense, focused build time with active mentor check-ins",
             },
             {
@@ -964,7 +964,7 @@ export default function LandingPage() {
             { time: "09:30 AM", title: "Problem Reveal", desc: "Tracks and statements unlocked" },
             { time: "09:45 AM", title: "Hack Starts", desc: "Build, code, iterate" },
             { time: "01:00 PM", title: "Games Start", desc: "Fun activities and refuel" },
-            { time: "02:30 PM", title: "Submissions Close", desc: "Final code/demo deadline" },
+            { time: "02:45 PM", title: "Submissions Close", desc: "Final code/demo deadline" },
             { time: "03:30 PM", title: "Judging & Prizes", desc: "Expert panel evaluations and awards" },
           ].map((item, i) => (
             <motion.div
