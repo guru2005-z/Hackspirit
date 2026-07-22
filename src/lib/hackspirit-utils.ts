@@ -93,7 +93,7 @@ export function exportRegistrationsCSV(regs: Registration[]) {
 
 export const HOST_PASSWORD = "bgtpeak-2017";
 export const ORGANIZER_PHONE = "919491501919";
-export const COUNTDOWN_TARGET = new Date("2026-07-23T09:30:00+05:30");
+export const COUNTDOWN_TARGET = new Date("2026-07-30T09:30:00+05:30");
 
 export function readRegistrations(): Registration[] {
   if (typeof window === "undefined") return [];
