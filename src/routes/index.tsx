@@ -413,8 +413,6 @@ function StudentVerseSection() {
   const [badgeName, setBadgeName] = useState("Your Name");
   const [badgeRoll, setBadgeRoll] = useState("23KB1A0000");
   const [badgeBranch, setBadgeBranch] = useState("CSE / AI&DS");
-  const [searchSkill, setSearchSkill] = useState("");
-
   const COORDINATOR_CONTACTS = [
     {
       member: "Member 1",
@@ -485,13 +483,6 @@ function StudentVerseSection() {
       a: "Yes! Winning teams will receive their cash prizes, trophies, IEEE Certificates, and Microsoft Certification Vouchers immediately during the closing ceremony.",
     },
   ];
-
-  const filteredTeammates = SAMPLE_TEAMMATES.filter(
-    (t) =>
-      !searchSkill ||
-      t.skills.some((s) => s.toLowerCase().includes(searchSkill.toLowerCase())) ||
-      t.branch.toLowerCase().includes(searchSkill.toLowerCase())
-  );
 
   return (
     <section id="studentverse" className="py-20 px-4 max-w-6xl mx-auto relative">
