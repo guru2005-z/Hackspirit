@@ -415,34 +415,24 @@ function StudentVerseSection() {
   const [badgeBranch, setBadgeBranch] = useState("CSE / AI&DS");
   const [searchSkill, setSearchSkill] = useState("");
 
-  const SAMPLE_TEAMMATES = [
+  const COORDINATOR_CONTACTS = [
     {
-      name: "Rahul Varma",
-      branch: "CSE - 3rd Year",
-      skills: ["AI / ML", "Python", "OpenCV"],
-      lookingFor: "Full Stack Developer",
-      contact: "https://wa.me/919491501919?text=Hi%20Rahul,%20saw%20your%20profile%20on%20StudentVerse!",
-    },
-    {
-      name: "Ananya Reddy",
-      branch: "AI&DS - 2nd Year",
-      skills: ["React", "Java", "UI/UX"],
-      lookingFor: "AI / GenAI Engineer",
-      contact: "https://wa.me/919491501919?text=Hi%20Ananya,%20saw%20your%20profile%20on%20StudentVerse!",
-    },
-    {
+      member: "Member 1",
       name: "K. Guravaiah",
-      branch: "CSE - IEEE SB",
-      skills: ["Full Stack", "Node.js", "Supabase"],
-      lookingFor: "Open to team up",
-      contact: "https://wa.me/919491501919?text=Hi,%20saw%20your%20StudentVerse%20profile!",
+      phone: "9491501919",
+      contact: "https://wa.me/919491501919?text=Hi%20K.%20Guravaiah,%20I%20have%20a%20doubt%20regarding%20HACKSPIRIT%202K26.",
     },
     {
-      name: "Sowmya K.",
-      branch: "ECE - 3rd Year",
-      skills: ["Python", "FastAPI", "TensorFlow"],
-      lookingFor: "Frontend Developer",
-      contact: "https://wa.me/919491501919?text=Hi%20Sowmya,%20saw%20your%20profile%20on%20StudentVerse!",
+      member: "Member 2",
+      name: "N. Upali",
+      phone: "6305349156",
+      contact: "https://wa.me/916305349156?text=Hi%20N.%20Upali,%20I%20have%20a%20doubt%20regarding%20HACKSPIRIT%202K26.",
+    },
+    {
+      member: "Member 3",
+      name: "K. Rithika",
+      phone: "7708731095",
+      contact: "https://wa.me/917708731095?text=Hi%20K.%20Rithika,%20I%20have%20a%20doubt%20regarding%20HACKSPIRIT%202K26.",
     },
   ];
 
@@ -524,7 +514,7 @@ function StudentVerseSection() {
       {/* StudentVerse Tab Navigation */}
       <div className="flex justify-center gap-2 flex-wrap mb-8">
         {[
-          { id: "teammates", label: "🤝 Teammate Finder", icon: Users },
+          { id: "teammates", label: "📞 Contact Us / Support", icon: Phone },
           { id: "vault", label: "📦 Starter Kits & Vault", icon: BookOpen },
           { id: "badge", label: "🏷️ Student Pass Generator", icon: ShieldCheck },
           { id: "faqs", label: "❓ Student FAQs & Support", icon: MessageSquare },
@@ -559,57 +549,40 @@ function StudentVerseSection() {
             className="space-y-4"
           >
             <div className="glass p-4 sm:p-6 rounded-2xl border border-white/10">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-                <div>
-                  <h3 className="font-display text-xl font-bold text-white flex items-center gap-2">
-                    <Users className="text-cyan" size={20} />
-                    <span>Find Teammates & Peer Skill Matching</span>
-                  </h3>
-                  <p className="text-muted text-xs mt-1">
-                    Looking for a developer, AI designer, or partner? Connect directly with registered students.
-                  </p>
-                </div>
-                <div className="relative w-full sm:w-64">
-                  <Search className="absolute left-3 top-2.5 text-muted" size={14} />
-                  <input
-                    type="text"
-                    placeholder="Search by skill (e.g. AI, React)..."
-                    value={searchSkill}
-                    onChange={(e) => setSearchSkill(e.target.value)}
-                    className="w-full bg-surface/80 border border-white/10 rounded-xl pl-9 pr-3 py-2 text-xs text-white placeholder-muted focus:border-cyan outline-none"
-                  />
-                </div>
+              <div className="mb-6">
+                <h3 className="font-display text-xl font-bold text-white flex items-center gap-2">
+                  <Phone className="text-cyan" size={20} />
+                  <span>Contact Us If Any Doubts</span>
+                </h3>
+                <p className="text-muted text-xs mt-1">
+                  Have any questions regarding registration, payments, or event rules? Connect directly with our student coordinators on WhatsApp.
+                </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {filteredTeammates.map((person, idx) => (
-                  <TiltWrapper key={idx} className="glass p-4 rounded-xl border border-white/10 hover:border-cyan/40 transition-all">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h4 className="font-bold text-white text-sm">{person.name}</h4>
-                        <span className="text-[11px] text-cyan font-mono">{person.branch}</span>
-                      </div>
-                      <span className="text-[10px] px-2 py-0.5 rounded bg-violet/20 text-violet border border-violet/30 font-medium">
-                        Looking for: {person.lookingFor}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-1.5 mt-3">
-                      {person.skills.map((skill) => (
-                        <span key={skill} className="text-[10px] px-2 py-0.5 rounded-full bg-surface/80 text-muted border border-white/10">
-                          {skill}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {COORDINATOR_CONTACTS.map((person, idx) => (
+                  <TiltWrapper key={idx} className="glass p-5 rounded-xl border border-white/10 hover:border-cyan/40 transition-all flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-[10px] px-2 py-0.5 rounded bg-cyan/20 text-cyan border border-cyan/30 font-semibold font-mono">
+                          {person.member}
                         </span>
-                      ))}
+                        <span className="text-xs text-muted flex items-center gap-1 font-mono">
+                          <Phone size={12} className="text-cyan" />
+                          {person.phone}
+                        </span>
+                      </div>
+                      <h4 className="font-bold text-white text-base mt-1">{person.name}</h4>
                     </div>
 
                     <a
                       href={person.contact}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-4 w-full btn-outline py-1.5 text-xs flex items-center justify-center gap-1.5 text-cyan hover:bg-cyan/20 border-cyan/30"
+                      className="mt-5 w-full btn-outline py-2 text-xs flex items-center justify-center gap-2 text-cyan hover:bg-cyan/20 border-cyan/30"
                     >
-                      <UserPlus size={12} />
-                      <span>Connect on WhatsApp</span>
+                      <MessageSquare size={14} />
+                      <span>Chat on WhatsApp</span>
                     </a>
                   </TiltWrapper>
                 ))}
